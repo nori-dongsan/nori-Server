@@ -88,6 +88,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Test"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -133,6 +136,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Test"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {

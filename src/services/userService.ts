@@ -1,9 +1,9 @@
 // src/users/usersService.ts
-import { User } from "../models/user";
+import { UserCreateDto } from "src/interfaces/test/UserCreateDto";
+import { provideSingleton } from "../config/provideSingleton";
+import { User } from "../entities/User";
 
-// A post request should not contain an id.
-export type UserCreationParams = Pick<User, "firstName" | "lastName" | "age">;
-
+@provideSingleton(UsersService)
 export class UsersService {
   public get(id: number, firstName: string, lastName: string): User {
     return {
@@ -14,7 +14,7 @@ export class UsersService {
     };
   }
 
-  public create(userCreationParams: UserCreationParams): User {
+  public create(userCreationParams: UserCreateDto): User {
     return {
       id: Math.floor(Math.random() * 10000), // Random
       ...userCreationParams,
