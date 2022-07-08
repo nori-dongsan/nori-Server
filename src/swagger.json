@@ -32,7 +32,37 @@
 				"type": "object",
 				"additionalProperties": true
 			},
-			"Pick_User.firstName-or-lastName-or-age_": {
+			"PostBaseResponseDto": {
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"id": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"id"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"status",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"UserCreateDto": {
 				"properties": {
 					"firstName": {
 						"type": "string"
@@ -51,10 +81,7 @@
 					"age"
 				],
 				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"UserCreationParams": {
-				"$ref": "#/components/schemas/Pick_User.firstName-or-lastName-or-age_"
+				"additionalProperties": true
 			}
 		},
 		"securitySchemes": {}
@@ -130,7 +157,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"$ref": "#/components/schemas/PostBaseResponseDto"
 								}
 							}
 						}
@@ -146,7 +173,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserCreationParams"
+								"$ref": "#/components/schemas/UserCreateDto"
 							}
 						}
 					}
