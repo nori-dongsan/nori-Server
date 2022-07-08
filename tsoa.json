@@ -1,12 +1,22 @@
 {
-  "entryFile": "src/app.ts",
-  "noImplicitAdditionalProperties": "throw-on-extras",
-  "controllerPathGlobs": ["src/**/*Controller.ts"],
+  "basePath": "/",
+  "entryFile": "./src/server.ts",
+  "noImplicitAdditionalProperties": true,
+  "controllerPathGlobs": ["./src/controllers/**/*Controller.ts"],
   "spec": {
-    "outputDirectory": "build",
-    "specVersion": 3
+    "specVersion": 3,
+    "contact": {
+      "email": "seungheon328@gmail.com",
+      "name": "이승헌"
+    },
+    "host": "localhost:8080",
+    "outputDirectory": "./src",
+    "schemes": ["http"]
   },
   "routes": {
-    "routesDir": "build"
-  }
+    "routesDir": "./src/routes",
+    "middleware": "express",
+    "iocModule": "./src/config/ioc"
+  },
+  "ignore": ["**/node_modules/**", "test/**/*"]
 }
