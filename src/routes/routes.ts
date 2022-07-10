@@ -3,7 +3,7 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { UsersController } from './../controllers/UserController';
+import { TestController } from './../controllers/TestController';
 import { iocContainer } from './../config/ioc';
 import { IocContainer, IocContainerFactory } from '@tsoa/runtime';
 import type { RequestHandler } from 'express';
@@ -12,25 +12,25 @@ import * as express from 'express';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "User": {
+    "PostBaseResponseDto": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
-            "firstName": {"dataType":"string","required":true},
-            "lastName": {"dataType":"string","required":true},
-            "age": {"dataType":"double","required":true},
+            "status": {"dataType":"double","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double","required":true}},"required":true},
         },
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_User.firstName-or-lastName-or-age_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"firstName":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true},"age":{"dataType":"double","required":true}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UserCreationParams": {
-        "dataType": "refAlias",
-        "type": {"ref":"Pick_User.firstName-or-lastName-or-age_","validators":{}},
+    "TestCreateDto": {
+        "dataType": "refObject",
+        "properties": {
+            "snsId": {"dataType":"string","required":true},
+            "nickname": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "provider": {"dataType":"string","required":true},
+        },
+        "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -43,45 +43,13 @@ export function RegisterRoutes(app: express.Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.get('/test/:userId',
-            ...(fetchMiddlewares<RequestHandler>(UsersController)),
-            ...(fetchMiddlewares<RequestHandler>(UsersController.prototype.getUser)),
-
-            async function UsersController_getUser(request: any, response: any, next: any) {
-            const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
-                    firstName: {"in":"query","name":"firstName","required":true,"dataType":"string"},
-                    lastName: {"in":"query","name":"lastName","required":true,"dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
-
-                const controller: any = await container.get<UsersController>(UsersController);
-                if (typeof controller['setStatus'] === 'function') {
-                controller.setStatus(undefined);
-                }
-
-
-              const promise = controller.getUser.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/test',
-            ...(fetchMiddlewares<RequestHandler>(UsersController)),
-            ...(fetchMiddlewares<RequestHandler>(UsersController.prototype.createUser)),
+            ...(fetchMiddlewares<RequestHandler>(TestController)),
+            ...(fetchMiddlewares<RequestHandler>(TestController.prototype.createUser)),
 
-            async function UsersController_createUser(request: any, response: any, next: any) {
+            async function TestController_createUser(request: any, response: any, next: any) {
             const args = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"UserCreationParams"},
+                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"TestCreateDto"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -92,7 +60,7 @@ export function RegisterRoutes(app: express.Router) {
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
-                const controller: any = await container.get<UsersController>(UsersController);
+                const controller: any = await container.get<TestController>(TestController);
                 if (typeof controller['setStatus'] === 'function') {
                 controller.setStatus(undefined);
                 }

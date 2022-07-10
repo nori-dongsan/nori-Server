@@ -1,23 +1,22 @@
 // src/users/usersService.ts
-import { UserCreateDto } from "src/interfaces/test/UserCreateDto";
+import { TestCreateDto } from "../interfaces/test/UserCreateDto";
+import { TestRepository } from "../repositories/TestRepository";
+import { getCustomRepository } from "typeorm";
 import { provideSingleton } from "../config/provideSingleton";
-import { User } from "../entities/User";
+import { Test } from "../entities/Test";
 
-@provideSingleton(UsersService)
-export class UsersService {
-  public get(id: number, firstName: string, lastName: string): User {
-    return {
-      id,
-      firstName,
-      lastName,
-      age: 20,
-    };
-  }
+@provideSingleton(TestService)
+export class TestService {
+  public async create(testCreateDto: TestCreateDto) {
+    const testRepository = getCustomRepository(TestRepository);
+    const newTest = new Test();
+    newTest.snsId = testCreateDto.snsId;
+    newTest.nickname = testCreateDto.nickname;
+    newTest.provider = testCreateDto.provider;
+    newTest.email = testCreateDto.email;
 
-  public create(userCreationParams: UserCreateDto): User {
-    return {
-      id: Math.floor(Math.random() * 10000), // Random
-      ...userCreationParams,
-    };
+    await testRepository.save(newTest);
+
+    return newTest;
   }
 }
