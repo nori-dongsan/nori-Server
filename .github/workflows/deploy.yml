@@ -13,7 +13,7 @@ jobs:
     steps:
     - name: make env.production
       run: |
-        cd ls
+        ls
         mkdir env
         cd ./env
         touch ./.env.production
