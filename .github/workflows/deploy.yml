@@ -32,7 +32,7 @@ jobs:
       id: deploy-prod
       with:
           host: ${{ secrets.HOST_PROD }}
-          port: ${{sercrets.PORT}}
+          port: ${{secrets.PORT}}
           username: ${{secrets.USER}}
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
