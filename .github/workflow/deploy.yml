@@ -1,7 +1,7 @@
 name: CI/CD
 on:
   push:
-    branches: [ "setting/#2" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -13,7 +13,7 @@ jobs:
     steps:
     - name: make env.production
       run: |
-        cd ./src
+        echo cd ls
         mkdir env
         cd ./env
         touch ./.env.production
