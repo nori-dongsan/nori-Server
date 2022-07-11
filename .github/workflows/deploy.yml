@@ -21,7 +21,7 @@ jobs:
     - name: Docker build & push to prod
       run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build Dockerfile -t ${{ secrets.DOCKER_REPO }}/nori-docker-server .
+          docker build -t ${{ secrets.DOCKER_REPO }}/nori-docker-server .
           docker push ${{ secrets.DOCKER_REPO }}/nori-docker-server
     - name: Deploy to prod
       uses: appleboy/ssh-action@master
