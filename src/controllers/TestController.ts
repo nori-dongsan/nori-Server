@@ -2,7 +2,7 @@
 import { inject } from "inversify";
 import { fluentProvide } from "inversify-binding-decorators";
 import { Body, Controller, Post, Route, SuccessResponse, Tags } from "tsoa";
-import { TestService } from "../services/UserService";
+import { TestService } from "../services/userService";
 import { TestCreateDto } from "../interfaces/test/UserCreateDto";
 import { PostBaseResponseDto } from "../interfaces/common/PostBaseResponseDto";
 import { wrapSuccess } from "../utils/success";
