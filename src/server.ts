@@ -1,14 +1,11 @@
-// src/server.ts
-import { app } from "./app";
+import { App } from "./app";
+import { logger } from "./utils/Logger";
 
-const port = process.env.PORT || 8080;
+try {
+  const app = new App();
+  const port = Number(process.env.PORT);
 
-app.listen(port, () =>
-  console.log(`
-  ################################################
-
-          👾  Server listening on ${port} 👾
-
-  ################################################
-  `)
-);
+  app.createExpressServer(port);
+} catch (error) {
+  logger.error(error);
+}

@@ -1,5 +1,6 @@
-export interface UserCreateDto {
-  firstName: string;
-  lastName: string;
-  age: number;
+export interface TestCreateDto {
+  snsId: string;
+  nickname: string;
+  email: string;
+  provider: string;
 }
