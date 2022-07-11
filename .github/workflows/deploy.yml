@@ -32,7 +32,8 @@ jobs:
       id: deploy-prod
       with:
           host: ${{ secrets.HOST_PROD }}
-          username: ec2-user
+          port: ${{sercrets.PORT}}
+          username: ${{secrets.USER}}
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
