@@ -18,3 +18,17 @@
 
 ## Project structure
 
+```markdown
+📦 src
+┣ 📂 config
+┃ 📂 controllers
+┣ 📂 entities
+┣ 📂 interface
+┣ 📂 repository
+┣ 📂 routes
+┣ 📂 service
+┣ 📂 utils
+┣ 📜 app.ts
+┣ 📜 server.ts
+┣ 📜 swagger.json
+```
