@@ -8,3 +8,13 @@
 #### [이다은](https://github.com/dannaward)
 
 #### [이승헌](https://github.com/lsh328328)
+
+## 서버 계약서
+
+* [Commit convention]()
+* [Code convention]()
+* [Branch strategy]()
+* [ERD]()
+
+## Project structure
+
