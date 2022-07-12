@@ -6,32 +6,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"User": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"firstName": {
-						"type": "string"
-					},
-					"lastName": {
-						"type": "string"
-					},
-					"age": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"firstName",
-					"lastName",
-					"age"
-				],
-				"type": "object",
-				"additionalProperties": true
-			},
 			"PostBaseResponseDto": {
 				"properties": {
 					"status": {
@@ -62,23 +36,26 @@
 				"type": "object",
 				"additionalProperties": true
 			},
-			"UserCreateDto": {
+			"TestCreateDto": {
 				"properties": {
-					"firstName": {
+					"snsId": {
 						"type": "string"
 					},
-					"lastName": {
+					"nickname": {
 						"type": "string"
 					},
-					"age": {
-						"type": "number",
-						"format": "double"
+					"email": {
+						"type": "string"
+					},
+					"provider": {
+						"type": "string"
 					}
 				},
 				"required": [
-					"firstName",
-					"lastName",
-					"age"
+					"snsId",
+					"nickname",
+					"email",
+					"provider"
 				],
 				"type": "object",
 				"additionalProperties": true
@@ -100,54 +77,6 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/test/{userId}": {
-			"get": {
-				"operationId": "GetUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/User"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Test"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "firstName",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "lastName",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/test": {
 			"post": {
 				"operationId": "CreateUser",
@@ -173,7 +102,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserCreateDto"
+								"$ref": "#/components/schemas/TestCreateDto"
 							}
 						}
 					}
