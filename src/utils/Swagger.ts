@@ -33,10 +33,19 @@ export function useSwagger(app: express.Application) {
       },
     },
     info: {
-      title: "JaeBook Server",
-      description: "JaeBook API",
+      title: "nori Server",
+      description: "nori Server API",
       version: "1.0.0",
+      contact: {
+        email: "with.nori2022@gmail.com",
+        name: "노리",
+      },
     },
+    servers: [
+      {
+        url: "http://localhost:8080",
+      },
+    ],
   });
 
   app.use(`${env.swagger.route}`, swaggerUi.serve, swaggerUi.setup(spec));
