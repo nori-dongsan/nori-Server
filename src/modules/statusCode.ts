@@ -1,4 +1,4 @@
-export default {
+const statusCode = {
   OK: 200,
   CREATED: 201,
   NO_CONTENT: 204,
@@ -7,8 +7,9 @@ export default {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   CONFLICT: 409,
-  VALIDATION_FAILED: 422,
   INTERNAL_SERVER_ERROR: 500,
   SERVICE_UNAVAILABLE: 503,
   DB_ERROR: 600,
 };
+
+export default statusCode;

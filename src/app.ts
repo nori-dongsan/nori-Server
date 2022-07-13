@@ -1,19 +1,15 @@
-// src/app.ts
-import express, {
-  Response as ExResponse,
-  Request as ExRequest,
-  NextFunction,
-} from "express";
-import bodyParser from "body-parser";
-import { RegisterRoutes } from "./routes/routes";
-import morgan from "morgan";
-import swaggerUi from "swagger-ui-express";
-import { ValidateError } from "tsoa";
-import ErrorType from "./utils/ErrorType";
-import StatusCode from "./utils/StatusCode";
-import { Message } from "./utils/ResponseMessage";
+import express from "express";
+import { createDatabaseConnection } from "./database";
+import {
+  useContainer as routingUseContainer,
+  useExpressServer,
+} from "routing-controllers";
 import { logger, stream } from "./utils/Logger";
-import { createDatabaseConnection } from "./config/database";
+import Container from "typedi";
+import { routingControllerOptions } from "./utils/RoutingConfig";
+import morgan from "morgan";
+import bodyParser from "body-parser";
+import { useSwagger } from "./utils/Swagger";
 
 export class App {
   public app: express.Application;
@@ -22,9 +18,6 @@ export class App {
     this.app = express();
     this.setDatabase();
     this.setMiddlewares();
-    this.setSwagger();
-    this.setRoutes();
-    this.errorHanlder();
   }
 
   /**
@@ -48,79 +41,14 @@ export class App {
   }
 
   /**
-   * swagger 세팅
-   */
-  private setSwagger(): void {
-    this.app.use(
-      "/api-docs",
-      swaggerUi.serve,
-      async (_req: ExRequest, res: ExResponse) => {
-        return res.send(swaggerUi.generateHTML(await import("./swagger.json")));
-      }
-    );
-  }
-
-  /**
-   * tsoa routes 등록
-   */
-  private setRoutes(): void {
-    RegisterRoutes(this.app);
-  }
-
-  /**
-   * http 에러 처리
-   */
-  private errorHanlder(): void {
-    this.app.use(function notFoundHandler(_req, res: ExResponse) {
-      const notFoundError: ErrorType = {
-        status: StatusCode.NOT_FOUND,
-        success: false,
-        message: Message.NOT_FOUND,
-      };
-      res.status(notFoundError.status).send(notFoundError);
-    });
-
-    this.app.use(function errorHandler(
-      err: unknown,
-      req: ExRequest,
-      res: ExResponse,
-      next: NextFunction
-    ): ExResponse | void {
-      if (err instanceof ValidateError) {
-        console.warn(
-          `Caught Validation Error for ${req.path}: \n ${err.fields}`
-        );
-        const validateError: ErrorType = {
-          status: StatusCode.VALIDATION_FAILED,
-          success: false,
-          message: Message.VALIDATION_FAILED,
-          datail: err?.fields,
-        };
-
-        return res.status(validateError.status).json(validateError);
-      }
-
-      if (err instanceof Error) {
-        console.log(err);
-        const internalServerError: ErrorType = {
-          status: StatusCode.INTERNAL_SERVER_ERROR,
-          success: false,
-          message: Message.INTERNAL_SERVER_ERROR,
-        };
-
-        return res.status(internalServerError.status).json(internalServerError);
-      }
-
-      next();
-    });
-  }
-
-  /**
    * Express를 시작한다.
-   * @param port 포트
    */
   public async createExpressServer(port: number): Promise<void> {
     try {
+      routingUseContainer(Container);
+      useExpressServer(this.app, routingControllerOptions);
+      useSwagger(this.app);
+
       this.app.listen(port, () => {
         logger.info(`Server is running on http://localhost:${port}`);
       });

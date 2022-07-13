@@ -3,12 +3,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Board } from "./Board";
+import { BoardComment } from "./BoardComment";
+import { LikeToy } from "./LikeToy";
 
-@Entity({ name: "test" })
-export class Test {
+@Entity({ name: "user" })
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,8 +20,7 @@ export class Test {
   @Column({ name: "sns_id", length: 50 })
   snsId: string;
 
-  @IsNotEmpty()
-  @Column({ name: "nickname", length: 20 })
+  @Column({ name: "nickname", length: 20, nullable: true })
   nickname: string;
 
   @IsNotEmpty()
@@ -31,6 +34,21 @@ export class Test {
   @IsNotEmpty()
   @Column({ name: "email" })
   email: string;
+
+  @OneToMany(() => Board, (board) => board.user, {
+    cascade: true,
+  })
+  boards: Board;
+
+  @OneToMany(() => BoardComment, (boardComment) => boardComment.user, {
+    cascade: true,
+  })
+  boardCommtents: BoardComment;
+
+  @OneToMany(() => LikeToy, (likeToy) => likeToy.user, {
+    cascade: true,
+  })
+  likeToys: LikeToy;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
