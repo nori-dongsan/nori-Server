@@ -13,9 +13,14 @@ import { env } from "../env";
  */
 export function useSwagger(app: express.Application) {
   // Parse routing-controllers classes into OPENAPI spec:
+  const schemas = validationMetadatasToSchemas({
+    refPointerPrefix: "#/components/schemas",
+  });
+
   const storage = getMetadataArgsStorage();
   const spec = routingControllersToSpec(storage, routingControllerOptions, {
     components: {
+      schemas,
       securitySchemes: {
         bearerAuth: {
           type: "http",
