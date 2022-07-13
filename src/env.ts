@@ -2,7 +2,7 @@
  * NODE_ENV에 따른 .env 파일을 로드한다.
  */
 require("dotenv").config({
-  path: `env/.env.${process.env.NODE_ENV || "development"}`,
+  path: `config/.env.${process.env.NODE_ENV || "development"}`,
 });
 
 /**
@@ -13,7 +13,7 @@ export const env = {
   isProduction: process.env.NODE_ENV === "production",
   isTest: process.env.NODE_ENV === "test",
   app: {
-    port: Number(process.env.PORT) || 3000,
+    port: Number(process.env.PORT) || 8080,
     apiPrefix: process.env.API_PREFIX || "/api",
     jwtAccessSecret: process.env.JWT_SECRET_ACCESS_KEY,
     jwtRefreshSecret: process.env.JWT_SECRET_REFRESH_KEY,
@@ -21,7 +21,7 @@ export const env = {
   database: {
     host: process.env.DATABASE_HOST,
     port: Number(process.env.DATABASE_PORT) || 3306,
-    username: process.env.DATABASE_USERNAME,
+    usename: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     name: process.env.DATABASE_NAME,
     synchronize: process.env.TYPEORM_SYNCHRONIZE === "true",

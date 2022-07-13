@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { BoardComment } from "./BoardComments";
+import { BoardComment } from "./BoardComment";
 import { BoardImage } from "./BoardImage";
 import { User } from "./User";
 

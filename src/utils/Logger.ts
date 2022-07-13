@@ -1,13 +1,13 @@
-import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
+import { existsSync, mkdirSync } from "fs";
 import {
-  createLogger,
-  format,
   Logger,
+  createLogger,
   LoggerOptions,
+  format,
   transports,
 } from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
+import DailyRotateFile = require("winston-daily-rotate-file");
 
 const { combine, timestamp, printf, prettyPrint, colorize, json, errors } =
   format;
@@ -16,7 +16,6 @@ const logDirectory = "logs";
 const filename = join(logDirectory, "app-%DATE%.log");
 const level = process.env.NODE_ENV === "production" ? "error" : "debug";
 
-// log 저장 폴더 없을 시 생성
 if (!existsSync(logDirectory)) {
   mkdirSync(logDirectory);
 }
@@ -39,7 +38,7 @@ const consoleOutputFormat = combine(
 const fileOutputFormat = combine(
   printf((info) => {
     if (info.stack) {
-      return `${info.timestamp} ${info.level}: ${info.message}: ${info.stack}`;
+      return `${info.timestamp} ${info.level} ${info.message} : ${info.stack}`;
     }
 
     return `${info.timestamp} ${info.level}: ${info.message}`;
@@ -59,7 +58,6 @@ const options: LoggerOptions = {
       handleExceptions: true,
       format: consoleOutputFormat,
     }),
-
     // 파일 로그 출력
     new DailyRotateFile({
       handleExceptions: true,

@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Board } from "./Board";
-import { BoardComment } from "./BoardComments";
+import { BoardComment } from "./BoardComment";
 import { LikeToy } from "./LikeToy";
 
 @Entity({ name: "user" })
@@ -20,8 +20,7 @@ export class User {
   @Column({ name: "sns_id", length: 50 })
   snsId: string;
 
-  @IsNotEmpty()
-  @Column({ name: "nickname", length: 20 })
+  @Column({ name: "nickname", length: 20, nullable: true })
   nickname: string;
 
   @IsNotEmpty()
