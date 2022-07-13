@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --watch 'src/**/*' --exec 'ts-node' src/server.ts",
+    "dev": "nodemon --watch 'src/**/*' --exec ts-node src/server.ts",
     "start": "ts-node src/server.ts",
     "build": "tsc && node dist/server.js",
     "test": "jest --coverage --verbose",
