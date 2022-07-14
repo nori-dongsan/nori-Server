@@ -32,7 +32,9 @@ export class CreateUserDto {
  * 사용자 Response DTO
  */
 export class ResponseUserDto {
-  public email: string;
+  public accessToken: string;
 
-  public provider: string;
+  public refreshToken: string;
+
+  public isSignup: boolean;
 }

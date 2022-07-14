@@ -35,6 +35,9 @@ export class User {
   @Column({ name: "email" })
   email: string;
 
+  @Column({ name: "refresh_token", nullable: true, select: false })
+  refreshToekn: string;
+
   @OneToMany(() => Board, (board) => board.user, {
     cascade: true,
   })

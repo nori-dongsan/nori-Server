@@ -1,8 +1,15 @@
-import { Body, HttpCode, JsonController, Post, Res } from "routing-controllers";
+import {
+  Body,
+  HttpCode,
+  JsonController,
+  Post,
+  Req,
+  Res,
+} from "routing-controllers";
 import { UserService } from "../services/UserService";
 import { OpenAPI } from "routing-controllers-openapi";
 import { CreateUserDto, ResponseUserDto } from "../dtos/UserDto";
-import { Response } from "express";
+import { Request, Response } from "express";
 import statusCode from "../modules/statusCode";
 import util from "../modules/util";
 import message from "../modules/responseMessage";
@@ -12,21 +19,23 @@ export class AuthController {
   constructor(private userService: UserService) {}
 
   @HttpCode(201)
-  @Post("/signup")
+  @Post("/login")
   @OpenAPI({
-    summary: "사용자 회원가입",
-    description: "사용자 생성 후 반환",
-    statusCode: "201",
+    summary: "소셜 로그인",
+    description: "소셜 로그인 및 유저 등록",
+    statusCode: "200",
   })
-  public async register(
+  public async signup(
     @Body() createUserDto: CreateUserDto,
+    @Req() req: Request,
     @Res() res: Response
   ): Promise<Response> {
     const newUser = await this.userService.create(createUserDto);
 
     const user: ResponseUserDto = {
-      email: newUser.email,
-      provider: newUser.provider,
+      accessToken: "hi",
+      refreshToken: newUser.refreshToekn,
+      isSignup: false,
     };
 
     return res
