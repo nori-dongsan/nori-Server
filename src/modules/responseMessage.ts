@@ -11,6 +11,9 @@ const message = {
 
   // 유저
   CREATE_USER: "유저 생성",
+
+  // 게시판
+  READ_BAORD_LIST_SUCCESS: "게시물 목록 조회 성공"
 };
 
 export default message;
