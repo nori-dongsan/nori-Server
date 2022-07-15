@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { CreateUserDto } from "../dtos/UserDto";
 import { Board } from "./Board";
 import { BoardComment } from "./BoardComment";
 import { LikeToy } from "./LikeToy";
@@ -35,8 +36,8 @@ export class User {
   @Column({ name: "email" })
   email: string;
 
-  @Column({ name: "refresh_token", nullable: true, select: false })
-  refreshToekn: string;
+  @Column({ name: "refresh_token", nullable: true })
+  refreshToken: string;
 
   @OneToMany(() => Board, (board) => board.user, {
     cascade: true,
@@ -58,4 +59,13 @@ export class User {
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
+
+  public toEntity(createUserDto: CreateUserDto): User {
+    const user = new User();
+    user.snsId = createUserDto.snsId;
+    user.email = createUserDto.email;
+    user.provider = createUserDto.provider;
+
+    return user;
+  }
 }

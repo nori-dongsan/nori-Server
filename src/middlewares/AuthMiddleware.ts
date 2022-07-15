@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { User } from "../entities/User";
-import { env } from "../env";
-import message from "../modules/responseMessage";
-import statusCode from "../modules/statusCode";
-import util from "../modules/util";
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { User } from '../entities/User';
+import { env } from '../env';
+import message from '../modules/responseMessage';
+import statusCode from '../modules/statusCode';
+import util from '../modules/util';
 
 /**
  * 헤더에서 accessToken을 추출한다.
@@ -32,15 +32,13 @@ const extractRefreshToken = (req: Request) => {
  */
 export const generateAccessToken = (user: User) => {
   const payload = {
-    snsId: user.snsId,
-    email: user.email,
-    nickname: user.nickname,
+    id: user.id,
   };
 
   return jwt.sign(payload, String(env.app.jwtAccessSecret), {
-    algorithm: "HS256",
-    expiresIn: "2h",
-    issuer: "nori",
+    algorithm: 'HS256',
+    expiresIn: '2h',
+    issuer: 'nori',
   });
 };
 
@@ -50,18 +48,18 @@ export const generateAccessToken = (user: User) => {
  */
 export const generateRefreshToken = (user: User) => {
   const payload = {
-    snsId: user.snsId,
+    id: user.id,
   };
 
   return jwt.sign(payload, String(env.app.jwtRefreshSecret), {
-    algorithm: "HS256",
-    expiresIn: "14d",
-    issuer: "nori",
+    algorithm: 'HS256',
+    expiresIn: '14d',
+    issuer: 'nori',
   });
 };
 
 /**
- * JWT AccessToken을 체크한다.
+ * JWT 헤더에 존재하는 AccessToken을 체크한다.
  * @param req
  * @param res
  * @param next
@@ -87,7 +85,7 @@ export const verifyAccessToken = (
 };
 
 /**
- * JWT RefreshToken을 체크한다.
+ * JWT 헤더에 존재하는 RefreshToken을 체크한다.
  * @param req
  * @param res
  * @param next

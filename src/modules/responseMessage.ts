@@ -12,7 +12,9 @@ const message = {
   INVALID_PASSWORD: "비밀번호 오류",
 
   // 유저
-  CREATE_USER: "유저 생성",
+  CREATE_USER: "유저 생성 성공",
+  CREATE_USER_FAIL: "유저 생성 실패",
+  LOGIN_SUCCESS: "로그인 성공",
 };
 
 export default message;
