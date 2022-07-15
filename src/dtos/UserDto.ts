@@ -1,10 +1,15 @@
-import { IsNotEmpty, Length, IsEmail } from "class-validator";
-import { User } from "../entities/User";
+import { IsNotEmpty, Length, IsEmail, IsString } from 'class-validator';
 
 /**
  * 사용자 생성 DTO
  */
 export class CreateUserDto {
+  constructor(snsId: string, email: string, provider: string) {
+    this.snsId = snsId;
+    this.email = email;
+    this.provider = provider;
+  }
+
   @IsNotEmpty()
   public snsId: string;
 
@@ -14,25 +19,17 @@ export class CreateUserDto {
   public email: string;
 
   @IsNotEmpty()
+  @IsString()
   public provider: string;
-
-  public toEntity(): User {
-    const { snsId, email, provider } = this;
-
-    const user = new User();
-    user.snsId = snsId;
-    user.email = email;
-    user.provider = provider;
-
-    return user;
-  }
 }
 
 /**
  * 사용자 Response DTO
  */
 export class ResponseUserDto {
-  public email: string;
+  public accessToken: string;
 
-  public provider: string;
+  public refreshToken: string;
+
+  public isSignup: boolean;
 }
