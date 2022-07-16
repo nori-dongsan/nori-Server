@@ -5,6 +5,7 @@ import statusCode from '../modules/statusCode';
 import util from '../modules/util';
 import message from '../modules/responseMessage';
 import { HomeService } from '../services/homeService';
+import { logger } from '../utils/Logger';
 
 @JsonController('/home')
 export class HomeController {
@@ -18,10 +19,25 @@ export class HomeController {
     statusCode: '200',
   })
   public async getHomeData(@Res() res: Response): Promise<Response> {
-    const list = await this.homeService.fetchList();
+    try {
+      const list = await this.homeService.fetchList();
 
-    return res
-      .status(statusCode.OK)
-      .send(util.success(statusCode.OK, message.FETCH_HOME_DATA_SUCCESS, list));
+      return res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, message.FETCH_HOME_DATA_SUCCESS, list)
+        );
+    } catch (err) {
+      logger.error(err);
+
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(
+          util.fail(
+            statusCode.INTERNAL_SERVER_ERROR,
+            message.INTERNAL_SERVER_ERROR
+          )
+        );
+    }
   }
 }
