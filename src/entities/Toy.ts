@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -7,43 +7,43 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { ToyDto } from "../dtos/ToyDto";
-import { LikeToy } from "./LikeToy";
-import { ToyCategory } from "./ToyCategory";
-import { ToySite } from "./ToySite";
+} from 'typeorm';
+import { ToyDto } from '../dtos/ToyDto';
+import { LikeToy } from './LikeToy';
+import { ToyCategory } from './ToyCategory';
+import { ToySite } from './ToySite';
 
-@Entity({ name: "toy" })
+@Entity({ name: 'toy' })
 export class Toy {
   @PrimaryGeneratedColumn()
   id: number;
 
   @IsNotEmpty()
-  @Column({ name: "title" })
+  @Column({ name: 'title' })
   title: string;
 
   @IsNotEmpty()
-  @Column({ name: "price" })
+  @Column({ name: 'price' })
   price: string;
 
   @IsNotEmpty()
-  @Column({ name: "month" })
+  @Column({ name: 'month' })
   month: number;
 
   @IsNotEmpty()
-  @Column({ name: "link" })
+  @Column({ name: 'link' })
   link: string;
 
   @IsNotEmpty()
-  @Column({ name: "play_how" })
+  @Column({ name: 'play_how' })
   playHow: string;
 
   @IsNotEmpty()
-  @Column({ name: "kind", length: 20 })
+  @Column({ name: 'kind', length: 20 })
   kind: string;
 
   @IsNotEmpty()
-  @Column({ name: "collection", length: 20 })
+  @Column({ name: 'collection', length: 20 })
   collection: string;
 
   @OneToMany(() => ToyCategory, (toyCategory) => toyCategory.toy, {
@@ -52,7 +52,7 @@ export class Toy {
   toyCategories: ToyCategory;
 
   @ManyToOne(() => ToySite, (toySite) => toySite.toy, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
     nullable: false,
   })
   toySite: ToySite;
@@ -63,7 +63,7 @@ export class Toy {
   likeToys: LikeToy;
 
   @IsNotEmpty()
-  @Column({ name: "image" })
+  @Column({ name: 'image' })
   image: string;
 
   @CreateDateColumn()
@@ -77,7 +77,7 @@ export class Toy {
 
     for (const toy of toyEntity) {
       const toyDto = new ToyDto();
-      
+
       toyDto.image = toy.image;
       toyDto.siteName = toy.toySite.toySite;
       toyDto.title = toy.title;
@@ -88,6 +88,6 @@ export class Toy {
       toys.push(toyDto);
     }
 
-    return toys
+    return toys;
   }
 }
