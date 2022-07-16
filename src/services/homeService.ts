@@ -10,14 +10,26 @@ export class HomeService {
   constructor(@InjectRepository() private homeRepository: HomeRepository) {}
 
   public async fetchList(): Promise<ResponseHomeDto> {
-    const trending = await this.homeRepository.findByIds([0, 1, 2]);
-    const noriPick = await this.homeRepository.findByIds([0, 1, 2]);
-    const senses = await this.homeRepository.findByIds([0, 1, 2]);
-    const smart = await this.homeRepository.findByIds([0, 1, 2]);
-
     let homeToys = new ResponseHomeDto()
-    // TODO: homeToys에 형식에 맞게 데이터 넣기
+
+    // TODO: 희지가 스프레드 시트 다 적으면 그에 맞게 데이터 넣기
+    homeToys.trending = await this.fetchToys([0, 1, 2]);
+    homeToys.noriPick = await this.fetchToys([0, 1, 2]);
+    homeToys.senses = await this.fetchToys([0, 1, 2]);
+    homeToys.smart = await this.fetchToys([0, 1, 2]);
 
     return homeToys;
+  }
+
+  // id값에 따라 장난감 리스트 반환
+  private async fetchToys(ids: any[]): Promise<ToyDto[]> {
+    const toys = await this.homeRepository.findByIds(ids, { 
+      relations: ['toySites'], 
+      select: ['image', 'toySite', 'title', 'price', 'month', 'link'] 
+    });
+
+    const toysDto = new Toy().toDto(toys)
+
+    return toysDto
   }
 }

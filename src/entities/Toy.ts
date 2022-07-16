@@ -3,10 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { ToyDto } from "../dtos/ToyDto";
 import { LikeToy } from "./LikeToy";
 import { ToyCategory } from "./ToyCategory";
 import { ToySite } from "./ToySite";
@@ -47,22 +49,45 @@ export class Toy {
   @OneToMany(() => ToyCategory, (toyCategory) => toyCategory.toy, {
     cascade: true,
   })
-  toyCategorys: ToyCategory;
+  toyCategories: ToyCategory;
 
-  @OneToMany(() => ToySite, (toySite) => toySite.toy, {
+  @ManyToOne(() => ToySite, (toySite) => toySite.toy, {
     onDelete: "CASCADE",
     nullable: false,
   })
-  toySites: ToySite;
+  toySite: ToySite;
 
   @OneToMany(() => LikeToy, (likeToy) => likeToy.toy, {
     cascade: true,
   })
   likeToys: LikeToy;
 
+  @IsNotEmpty()
+  @Column({ name: "image" })
+  image: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  public toDto(toyEntity: Toy[]): ToyDto[] {
+    const toys: ToyDto[] = [];
+
+    for (const toy of toyEntity) {
+      const toyDto = new ToyDto();
+      
+      toyDto.image = toy.image;
+      toyDto.siteName = toy.toySite.toySite;
+      toyDto.title = toy.title;
+      toyDto.price = toy.price;
+      toyDto.month = toy.month;
+      toyDto.siteUrl = toy.link;
+
+      toys.push(toyDto);
+    }
+
+    return toys
+  }
 }
