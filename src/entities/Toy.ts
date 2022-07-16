@@ -51,7 +51,7 @@ export class Toy {
   })
   toyCategories: ToyCategory;
 
-  @ManyToOne(() => ToySite, (toySite) => toySite.toy, {
+  @OneToMany(() => ToySite, (toySite) => toySite.toy, {
     onDelete: 'CASCADE',
     nullable: false,
   })

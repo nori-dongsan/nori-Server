@@ -6,12 +6,12 @@ import util from '../modules/util';
 import message from '../modules/responseMessage';
 import { HomeService } from '../services/homeService';
 
-@JsonController('/auth')
+@JsonController('/home')
 export class HomeController {
   constructor(private homeService: HomeService) {}
 
   @HttpCode(200)
-  @Get('/home')
+  @Get('')
   @OpenAPI({
     summary: '홈 데이터 조회',
     description: '메인 화면 데이터 반환',

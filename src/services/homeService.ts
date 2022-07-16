@@ -25,7 +25,7 @@ export class HomeService {
   // id값에 따라 장난감 리스트 반환
   private async fetchToys(ids: any[]): Promise<ToyDto[]> {
     const toys = await this.homeRepository.findByIds(ids, {
-      relations: ['toySites'],
+      relations: ['toySite'],
       select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
     });
 
@@ -40,17 +40,20 @@ export class HomeService {
     // TODO: 희지가 스프레드 시트에 넣어주면 자동 업데이트 연동하거나 직접 값 없데이트 하기
     const theme = new ThemeDto();
     theme.id = 0;
-    theme.image = '우리아이 걸음마를 위한';
+    theme.image = '';
+    theme.title = '우리아이 걸음마를 위한';
     theme.subtitle = '쏘서, 보행기 모음';
     themes.push(theme);
 
     theme.id = 1;
-    theme.image = '오감 발달 아이들이 좋아하는';
+    theme.image = '';
+    theme.title = '오감 발달 아이들이 좋아하는';
     theme.subtitle = '주방놀이 세트';
     themes.push(theme);
 
     theme.id = 2;
-    theme.image = '친구들과 함께';
+    theme.image = '';
+    theme.title = '친구들과 함께';
     theme.subtitle = '다인원 장난감 추천';
     themes.push(theme);
 
