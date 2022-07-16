@@ -17,7 +17,8 @@ const message = {
   LOGIN_SUCCESS: "로그인 성공",
 
   // 게시판
-  READ_BAORD_LIST_SUCCESS: "게시물 목록 조회 성공"
+  READ_BAORD_LIST_SUCCESS: "게시물 목록 조회 성공",
+  CREATE_BOARD_SUCCESS: "게시물 생성 성공"
 };
 
 export default message;

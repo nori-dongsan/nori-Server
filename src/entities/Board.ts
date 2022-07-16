@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { BoardCreateDto } from "../dtos/BoardDto";
 import { BoardComment } from "./BoardComment";
 import { BoardImage } from "./BoardImage";
 import { User } from "./User";
@@ -50,4 +51,11 @@ export class Board {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  public toEntity(boardCreateDto: BoardCreateDto) {
+    const board = new Board()
+    board.title = boardCreateDto.title
+    board.content = boardCreateDto.content
+    board.user = boardCreateDto.user
+  }
 }
