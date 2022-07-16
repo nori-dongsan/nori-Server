@@ -17,7 +17,7 @@ export class BoardController {
         description: "게시물 리스트 반환",
         statusCode: "200"
     })
-    public async getBoardList(
+    public async getList(
         @Res() res: Response
     ): Promise<Response> {
         const boards = await this.boardService.getList()
