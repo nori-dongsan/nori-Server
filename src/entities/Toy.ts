@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ToyDto } from '../dtos/ToyDto';
 import { LikeToy } from './LikeToy';
 import { ToyCategory } from './ToyCategory';
 import { ToySite } from './ToySite';
@@ -27,8 +26,20 @@ export class Toy {
   price: string;
 
   @IsNotEmpty()
+  @Column({ name: 'price_cd' })
+  priceCd: number;
+
+  @IsNotEmpty()
   @Column({ name: 'month' })
   month: number;
+
+  @IsNotEmpty()
+  @Column({ name: 'min_month' })
+  minMonth: number;
+
+  @IsNotEmpty()
+  @Column({ name: 'max_month' })
+  maxMonth: number;
 
   @IsNotEmpty()
   @Column({ name: 'link' })
@@ -39,8 +50,12 @@ export class Toy {
   playHow: string;
 
   @IsNotEmpty()
-  @Column({ name: 'kind', length: 20 })
-  kind: string;
+  @Column({ name: 'play_how_cd' })
+  playHowCd: number;
+
+  @IsNotEmpty()
+  @Column({ name: 'image' })
+  image: string;
 
   @IsNotEmpty()
   @Column({ name: 'collection', length: 20 })
@@ -51,7 +66,7 @@ export class Toy {
   })
   toyCategories: ToyCategory;
 
-  @OneToMany(() => ToySite, (toySite) => toySite.toy, {
+  @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
     onDelete: 'CASCADE',
     nullable: false,
   })
@@ -62,32 +77,9 @@ export class Toy {
   })
   likeToys: LikeToy;
 
-  @IsNotEmpty()
-  @Column({ name: 'image' })
-  image: string;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  public toDto(toyEntity: Toy[]): ToyDto[] {
-    const toys: ToyDto[] = [];
-
-    for (const toy of toyEntity) {
-      const toyDto = new ToyDto();
-
-      toyDto.image = toy.image;
-      toyDto.siteName = toy.toySite.toySite;
-      toyDto.title = toy.title;
-      toyDto.price = toy.price;
-      toyDto.month = toy.month;
-      toyDto.siteUrl = toy.link;
-
-      toys.push(toyDto);
-    }
-
-    return toys;
-  }
 }

@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -18,11 +19,11 @@ export class ToySite {
   @Column({ name: 'toy_site', length: 20 })
   toySite: string;
 
-  @ManyToOne(() => Toy, (toy) => toy.toySite, {
+  @OneToMany(() => Toy, (toy) => toy.toySite, {
     onDelete: 'CASCADE',
     nullable: false,
   })
-  toy: Toy;
+  toys: Toy;
 
   @CreateDateColumn()
   createdAt: Date;
