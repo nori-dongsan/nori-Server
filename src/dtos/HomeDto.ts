@@ -6,6 +6,8 @@ import { ToyDto } from './ToyDto';
 export class ResponseHomeDto {
   public trending: ToyDto[];
 
+  public theme: ThemeDto[];
+
   public noriPick: ToyDto[];
 
   public senses: ToyDto[];
@@ -15,4 +17,10 @@ export class ResponseHomeDto {
 
 export class ThemeDto {
   public id: number;
+
+  public image: string;
+
+  public subtitle: string;
+
+  public title: string;
 }
