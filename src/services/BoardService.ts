@@ -26,10 +26,13 @@ export class BoardService {
      */
     public async create(boardCreateDto: BoardCreateDto) {
         const queryRunner = await getConnection().createQueryRunner();
+        await queryRunner.connect();
         await queryRunner.startTransaction();
+
         try {
             const board = this.boardRepository.create(boardCreateDto)
-            await this.boardRepository.save(board)
+            await queryRunner.manager.save(board)
+            await queryRunner.commitTransaction();
             return board
         } catch (err) {
             logger.error(err);
