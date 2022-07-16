@@ -18,7 +18,7 @@ export class HomeController {
     description: '메인 화면 데이터 반환',
     statusCode: '200',
   })
-  public async getHomeData(@Res() res: Response): Promise<Response> {
+  public async getData(@Res() res: Response): Promise<Response> {
     try {
       const list = await this.homeService.fetchList();
 
