@@ -4,6 +4,7 @@ import { ResponseHomeDto, ThemeDto } from '../dtos/HomeDto';
 import { ToyDto } from '../dtos/ToyDto';
 import { Toy } from '../entities/Toy';
 import { HomeRepository } from '../repositories/HomeRepository';
+import { logger } from '../utils/Logger';
 
 @Service()
 export class HomeService {
@@ -23,15 +24,25 @@ export class HomeService {
   }
 
   // id값에 따라 장난감 리스트 반환
-  private async fetchToys(ids: any[]): Promise<ToyDto[]> {
-    const toys = await this.homeRepository.findByIds(ids, {
-      relations: ['toySite'],
-      select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
-    });
+  private async fetchToys(ids: any[]): Promise<ToyDto[] | null> {
+    try {
+      const toys = await this.homeRepository.findByIds(ids, {
+        relations: ['toySite'],
+        select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
+      });
 
-    const toysDto = new Toy().toDto(toys);
+      // 빈 배열이면 null 반환
+      if (toys.length === 0) {
+        return null;
+      } else {
+        const toysDto = new Toy().toDto(toys);
+        return toysDto;
+      }
+    } catch (err) {
+      logger.error(err);
 
-    return toysDto;
+      return null;
+    }
   }
 
   private fetchThemes(): ThemeDto[] {

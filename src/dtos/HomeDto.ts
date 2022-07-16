@@ -4,15 +4,15 @@ import { ToyDto } from './ToyDto';
  * Home Response Dto
  */
 export class ResponseHomeDto {
-  public trending: ToyDto[];
+  public trending?: ToyDto[] | null;
 
-  public theme: ThemeDto[];
+  public theme?: ThemeDto[] | null;
 
-  public noriPick: ToyDto[];
+  public noriPick?: ToyDto[] | null;
 
-  public senses: ToyDto[];
+  public senses?: ToyDto[] | null;
 
-  public smart: ToyDto[];
+  public smart?: ToyDto[] | null;
 }
 
 export class ThemeDto {
