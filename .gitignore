@@ -105,4 +105,4 @@ dist
 .tern-port
 
 # env
-/config
+/env
