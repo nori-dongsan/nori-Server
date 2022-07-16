@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -25,8 +26,20 @@ export class Toy {
   price: string;
 
   @IsNotEmpty()
+  @Column({ name: "price_cd" })
+  priceCd: number;
+
+  @IsNotEmpty()
   @Column({ name: "month" })
   month: number;
+
+  @IsNotEmpty()
+  @Column({ name: "min_month" })
+  minMonth: number;
+
+  @IsNotEmpty()
+  @Column({ name: "max_month" })
+  maxMonth: number;
 
   @IsNotEmpty()
   @Column({ name: "link" })
@@ -37,8 +50,12 @@ export class Toy {
   playHow: string;
 
   @IsNotEmpty()
-  @Column({ name: "kind", length: 20 })
-  kind: string;
+  @Column({ name: "play_how_cd" })
+  playHowCd: number;
+
+  @IsNotEmpty()
+  @Column({ name: "image" })
+  image: string;
 
   @IsNotEmpty()
   @Column({ name: "collection", length: 20 })
@@ -47,13 +64,13 @@ export class Toy {
   @OneToMany(() => ToyCategory, (toyCategory) => toyCategory.toy, {
     cascade: true,
   })
-  toyCategorys: ToyCategory;
+  toyCategories: ToyCategory;
 
-  @OneToMany(() => ToySite, (toySite) => toySite.toy, {
+  @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
     onDelete: "CASCADE",
     nullable: false,
   })
-  toySites: ToySite;
+  toySite: ToySite;
 
   @OneToMany(() => LikeToy, (likeToy) => likeToy.toy, {
     cascade: true,
