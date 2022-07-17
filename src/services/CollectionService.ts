@@ -3,13 +3,13 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ResponseCollectionDto } from '../dtos/CollectionDto';
 import { ToyDto } from '../dtos/ToyDto';
 import { Toy } from '../entities/Toy';
-import { collectionRepository } from '../repositories/CollectionRepository';
+import { CollectionRepository } from '../repositories/CollectionRepository';
 import { logger } from '../utils/Logger';
 
 @Service()
 export class CollectionService {
   constructor(
-    @InjectRepository() private collectionRepository: collectionRepository
+    @InjectRepository() private collectionRepository: CollectionRepository
   ) {}
 
   public async fetchList(
@@ -53,6 +53,7 @@ export class CollectionService {
     }
   }
 
+  // query param으로 들어온 string -> sql order 변환
   private translateOrder(sort: string | null): 'ASC' | 'DESC' {
     if (sort?.includes('desc')) {
       return 'DESC';

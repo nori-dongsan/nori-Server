@@ -29,7 +29,7 @@ export class Toy {
 
   @IsNotEmpty()
   @Column({ name: 'price_cd' })
-  priceCd: number;
+  priceCd: string;
 
   @IsNotEmpty()
   @Column({ name: 'month' })
@@ -71,7 +71,7 @@ export class Toy {
 
   @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
     onDelete: 'CASCADE',
-    nullable: false,
+    // nullable: false,
   })
   toySite: ToySite;
 
