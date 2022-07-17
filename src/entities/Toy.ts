@@ -11,6 +11,7 @@ import {
 import { ToyDto } from '../dtos/ToyDto';
 import { LikeToy } from './LikeToy';
 import { ToyCategory } from './ToyCategory';
+import { ToyCollection } from './ToyCollection';
 import { ToySite } from './ToySite';
 
 @Entity({ name: 'toy' })
@@ -24,7 +25,7 @@ export class Toy {
 
   @IsNotEmpty()
   @Column({ name: 'price' })
-  price: string;
+  price: number;
 
   @IsNotEmpty()
   @Column({ name: 'price_cd' })
@@ -58,9 +59,10 @@ export class Toy {
   @Column({ name: 'image' })
   image: string;
 
-  @IsNotEmpty()
-  @Column({ name: 'collection', length: 20 })
-  collection: string;
+  @ManyToOne(() => ToyCollection, (ToyCollection) => ToyCollection.toys, {
+    cascade: true,
+  })
+  toyCollection: ToyCollection;
 
   @OneToMany(() => ToyCategory, (toyCategory) => toyCategory.toy, {
     cascade: true,
