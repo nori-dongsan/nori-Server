@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -6,19 +6,19 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { Toy } from "./Toy";
+} from 'typeorm';
+import { Toy } from './Toy';
 
-@Entity({ name: "toy_category" })
+@Entity({ name: 'toy_category' })
 export class ToyCategory {
   @PrimaryGeneratedColumn()
   id: number;
 
   @IsNotEmpty()
-  @Column({ name: "category", length: 20 })
+  @Column({ name: 'category', length: 20 })
   category: string;
 
-  @ManyToOne(() => Toy, (toy) => toy.toyCategorys, {
+  @ManyToOne(() => Toy, (toy) => toy.toyCategories, {
     nullable: false,
   })
   toy: Toy;

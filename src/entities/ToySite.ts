@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -7,20 +7,20 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { Toy } from "./Toy";
+} from 'typeorm';
+import { Toy } from './Toy';
 
-@Entity({ name: "toy_site" })
+@Entity({ name: 'toy_site' })
 export class ToySite {
   @PrimaryGeneratedColumn()
   id: number;
 
   @IsNotEmpty()
-  @Column({ name: "toy_site", length: 20 })
+  @Column({ name: 'toy_site', length: 20 })
   toySite: string;
 
   @OneToMany(() => Toy, (toy) => toy.toySite, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
     nullable: false,
   })
   toys: Toy;

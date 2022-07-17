@@ -16,6 +16,9 @@ const message = {
   CREATE_USER_FAIL: "유저 생성 실패",
   LOGIN_SUCCESS: "로그인 성공",
 
+  // 홈
+  FETCH_HOME_DATA_SUCCESS: "홈 데이터 조회 성공",
+
   // 게시판
   READ_BAORD_LIST_SUCCESS: "게시물 목록 조회 성공"
 };

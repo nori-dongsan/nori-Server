@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -7,58 +7,59 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { LikeToy } from "./LikeToy";
-import { ToyCategory } from "./ToyCategory";
-import { ToySite } from "./ToySite";
+} from 'typeorm';
+import { ToyDto } from '../dtos/ToyDto';
+import { LikeToy } from './LikeToy';
+import { ToyCategory } from './ToyCategory';
+import { ToySite } from './ToySite';
 
-@Entity({ name: "toy" })
+@Entity({ name: 'toy' })
 export class Toy {
   @PrimaryGeneratedColumn()
   id: number;
 
   @IsNotEmpty()
-  @Column({ name: "title" })
+  @Column({ name: 'title' })
   title: string;
 
   @IsNotEmpty()
-  @Column({ name: "price" })
+  @Column({ name: 'price' })
   price: string;
 
   @IsNotEmpty()
-  @Column({ name: "price_cd" })
+  @Column({ name: 'price_cd' })
   priceCd: number;
 
   @IsNotEmpty()
-  @Column({ name: "month" })
+  @Column({ name: 'month' })
   month: number;
 
   @IsNotEmpty()
-  @Column({ name: "min_month" })
+  @Column({ name: 'min_month' })
   minMonth: number;
 
   @IsNotEmpty()
-  @Column({ name: "max_month" })
+  @Column({ name: 'max_month' })
   maxMonth: number;
 
   @IsNotEmpty()
-  @Column({ name: "link" })
+  @Column({ name: 'link' })
   link: string;
 
   @IsNotEmpty()
-  @Column({ name: "play_how" })
+  @Column({ name: 'play_how' })
   playHow: string;
 
   @IsNotEmpty()
-  @Column({ name: "play_how_cd" })
+  @Column({ name: 'play_how_cd' })
   playHowCd: number;
 
   @IsNotEmpty()
-  @Column({ name: "image" })
+  @Column({ name: 'image' })
   image: string;
 
   @IsNotEmpty()
-  @Column({ name: "collection", length: 20 })
+  @Column({ name: 'collection', length: 20 })
   collection: string;
 
   @OneToMany(() => ToyCategory, (toyCategory) => toyCategory.toy, {
@@ -67,7 +68,7 @@ export class Toy {
   toyCategories: ToyCategory;
 
   @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
     nullable: false,
   })
   toySite: ToySite;
@@ -82,4 +83,23 @@ export class Toy {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  public toDto(toyEntity: Toy[]): ToyDto[] {
+    const toys: ToyDto[] = [];
+
+    for (const toy of toyEntity) {
+      const toyDto = new ToyDto();
+
+      toyDto.image = toy.image;
+      toyDto.siteName = toy.toySite.toySite;
+      toyDto.title = toy.title;
+      toyDto.price = toy.price;
+      toyDto.month = toy.month;
+      toyDto.siteUrl = toy.link;
+
+      toys.push(toyDto);
+    }
+
+    return toys;
+  }
 }
