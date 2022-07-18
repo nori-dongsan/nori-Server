@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { BoardCommentResponseDto } from "../dtos/BoardComment";
+import { BoardDto } from "../dtos/BoardDto";
 import { BoardComment } from "./BoardComment";
 import { BoardImage } from "./BoardImage";
 import { User } from "./User";
@@ -38,12 +40,12 @@ export class Board {
   @OneToMany(() => BoardComment, (boardComment) => boardComment.board, {
     cascade: true,
   })
-  boardComments: BoardComment;
+  boardComments: BoardComment[];
 
   @OneToMany(() => BoardImage, (boardImages) => boardImages.board, {
     cascade: true,
   })
-  boardImages: BoardImage;
+  boardImages: BoardImage[];
 
   @CreateDateColumn()
   createdAt: Date;

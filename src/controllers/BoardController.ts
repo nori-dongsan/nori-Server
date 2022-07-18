@@ -1,10 +1,13 @@
-import { Get, HttpCode, JsonController, Res } from "routing-controllers";
+import { Get, HttpCode, JsonController, Param, Req, Res, UseBefore } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import message from "../modules/responseMessage";
 import statusCode from "../modules/statusCode";
 import util from "../modules/util";
 import { Response } from "express";
 import { BoardService } from "../services/boardService";
+import { verifyAccessToken } from "../middlewares/AuthMiddleware";
+import { BoardResponseDto } from "../dtos/BoardDto";
+import { Board } from "../entities/Board";
 
 @JsonController("/board")
 export class BoardController {
@@ -23,5 +26,31 @@ export class BoardController {
         const boards = await this.boardService.getList()
 
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards))
+    }
+
+    // @UseBefore(verifyAccessToken)
+    @HttpCode(200)
+    @Get("/:boardId")
+    @OpenAPI({
+        summary: "게시글 조회",
+        description: "게시글 반환",
+        statusCode: "200"
+    })
+    public async get(
+        @Res() res: Response,
+        @Param("boardId") boardId: number
+    ): Promise<Response> {
+        const { id } = res.locals.jwtPayload;
+        const board = await this.boardService.get(boardId)
+        let author = false
+        if (board?.user.id == id) {
+            author = true
+        }
+        if (!board) {
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, message.READ_BOARD_FAIL))
+        }
+        const boardResponseDto = new BoardResponseDto(board)
+        boardResponseDto["author"] = author
+        return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boardResponseDto))
     }
 }

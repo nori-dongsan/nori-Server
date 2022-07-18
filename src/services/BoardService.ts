@@ -1,7 +1,9 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
+import { BoardDto } from "../dtos/BoardDto";
 import { Board } from "../entities/Board";
 import { BoardRepository } from "../repositories/BoardRepository";
+import { logger } from "../utils/Logger";
 
 @Service()
 export class BoardService {
@@ -15,5 +17,18 @@ export class BoardService {
             skip: 0,
             take: 10
         })
+    }
+    /**
+     * 게시물 조회
+     * @param boardId 
+     */
+    public async get(boardId: number): Promise<Board | undefined> {
+        try {
+            const board = this.boardRepository.findOne({ id: boardId }, { relations: ['boardImages', 'boardComments', 'user'] })
+            return board
+        } catch (err) {
+            logger.error(err)
+        }
+
     }
 }
