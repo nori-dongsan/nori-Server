@@ -5,6 +5,7 @@ import { createMemoryDatabase } from '../../utils/CreateMemoryDatabase';
 import { UserSeed } from '../../utils/seeds/UserTestSeed';
 import { Connection } from 'typeorm';
 import { CreateUserDto } from '../../../src/dtos/UserDto';
+import { ReturnErrorType } from '../../../src/constants/ReturnErrorType';
 
 describe('UserService', () => {
   let db: Connection;
@@ -23,8 +24,10 @@ describe('UserService', () => {
   afterAll(() => db.close());
 
   const request = {
+    id: 1,
     snsId: '123123123',
     email: 'crayon@gmail.com',
+    nickname: 'crayon',
     provider: 'google',
   };
 
@@ -35,13 +38,12 @@ describe('UserService', () => {
   );
 
   it('사용자 정보가 유효한지 확인한다', async () => {
-    const isUser = await authService.validateUser('123');
-    console.log(isUser);
+    const isUser = await authService.validateUserBySnsId(request.snsId);
 
     if (isUser) {
-      expect(isUser.snsId).toBe(request.snsId);
+      expect(isUser.id).toBe(request.id);
     } else {
-      expect(isUser).toBe(null);
+      expect(isUser).toBe(ReturnErrorType.USER_NOT_EXIST_ERROR);
     }
   });
 
@@ -49,12 +51,22 @@ describe('UserService', () => {
     const newUser = await userService.create(createUserDto);
 
     if (!newUser) {
-      console.log('유저 생성 실패!');
       return;
     }
 
     expect(newUser.snsId).toBe(request.snsId);
     expect(newUser.email).toBe(request.email);
     expect(newUser.provider).toBe(request.provider);
+  });
+
+  it('신규 유저의 닉네임을 입력받고 정보를 반환한다', async () => {
+    const user = await authService.validateUserBySnsId(request.snsId);
+    if (!user) {
+      return;
+    }
+
+    await userService.updateNickname(user.id, request.nickname);
+    const updateUser = await authService.validateUserBySnsId(request.snsId);
+    expect(updateUser?.nickname).toBe(request.nickname);
   });
 });
