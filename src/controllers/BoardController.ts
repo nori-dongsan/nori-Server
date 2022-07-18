@@ -1,4 +1,4 @@
-import { Get, HttpCode, JsonController, Param, Req, Res, UseBefore } from "routing-controllers";
+import { Delete, Get, HttpCode, JsonController, Param, Req, Res, UseBefore } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import message from "../modules/responseMessage";
 import statusCode from "../modules/statusCode";
@@ -9,6 +9,7 @@ import { verifyAccessToken } from "../middlewares/AuthMiddleware";
 import { BoardResponseDto } from "../dtos/BoardDto";
 import { Board } from "../entities/Board";
 import { BoardCommentService } from "../services/BoardCommentService";
+import { logger } from "../utils/Logger";
 
 @JsonController("/board")
 export class BoardController {
@@ -30,7 +31,7 @@ export class BoardController {
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards))
     }
 
-    // @UseBefore(verifyAccessToken)
+    @UseBefore(verifyAccessToken)
     @HttpCode(200)
     @Get("/:boardId")
     @OpenAPI({
@@ -42,8 +43,7 @@ export class BoardController {
         @Res() res: Response,
         @Param("boardId") boardId: number
     ): Promise<Response> {
-        // const { id } = res.locals.jwtPayload;
-        const id = 14
+        const { id } = res.locals.jwtPayload;
         const board = await this.boardService.get(boardId)
         let author = false
         if (board?.user.id == id) {
@@ -56,5 +56,26 @@ export class BoardController {
         const boardResponseDto = new BoardResponseDto(board, comment!)
         boardResponseDto["author"] = author
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boardResponseDto))
+    }
+
+    @UseBefore(verifyAccessToken)
+    @HttpCode(200)
+    @Delete("/:boardId")
+    @OpenAPI({
+        summary: "게시글 삭제",
+        description: "게시글 삭제",
+        statusCode: "200"
+    })
+    public async delete(
+        @Res() res: Response,
+        @Param("boardId") boardId: number
+    ) {
+        try {
+            await this.boardService.delete(boardId)
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, message.DELETE_BOARD_SUCCESS))
+        } catch (err) {
+            logger.error(err)
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))
+        }
     }
 }

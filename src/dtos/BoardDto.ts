@@ -50,3 +50,9 @@ export class BoardDto {
     likeCount: number = 0
     replyList: BoardCommentResponseDto[]
 }
+
+export class BoardPutDto {
+    boardId: number
+    content?: string
+    imageList?: BoardImage[]
+}
