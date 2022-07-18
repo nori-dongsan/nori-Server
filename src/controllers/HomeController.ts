@@ -9,7 +9,7 @@ import { logger } from '../utils/Logger';
 
 @JsonController('/home')
 export class HomeController {
-  constructor(private homeService: HomeService) {}
+  constructor(private homeService: HomeService) { }
 
   @HttpCode(200)
   @Get('')

@@ -1,7 +1,7 @@
 import { Board } from "../entities/Board"
 import { BoardComment } from "../entities/BoardComment"
 import { BoardImage } from "../entities/BoardImage"
-import { BoardCommentResponseDto } from "./BoardComment"
+import { BoardCommentResponseDto } from "./BoardCommentDto"
 
 export class BoardResponseDto {
     author: boolean
@@ -15,7 +15,7 @@ export class BoardResponseDto {
     likeCount: number = 0
     replyList: BoardCommentResponseDto[]
 
-    constructor(board: Board) {
+    constructor(board: Board, comment: BoardComment[]) {
         this.category = board.section
         this.title = board.title
         this.userNickname = board.user.nickname
@@ -27,7 +27,7 @@ export class BoardResponseDto {
         this.content = board.content
         this.replyCount = 0
         this.likeCount = 0
-        const commentList = board.boardComments.map((value) => {
+        const commentList = comment.map((value) => {
             return <BoardCommentResponseDto>{
                 userNickname: value.user.nickname,
                 content: value.content,

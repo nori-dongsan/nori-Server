@@ -1,4 +1,4 @@
-import { CreateUserDto } from '../dtos/UserDto';
+import { CreateUserDto, UserDto } from '../dtos/UserDto';
 import { User } from '../entities/User';
 import { UserRepository } from '../repositories/UserRepository';
 import { Service } from 'typedi';
@@ -8,7 +8,7 @@ import { logger } from '../utils/Logger';
 
 @Service()
 export class UserService {
-  constructor(@InjectRepository() private userRepository: UserRepository) {}
+  constructor(@InjectRepository() private userRepository: UserRepository) { }
 
   /**
    * 사용자를 생성한다.
@@ -85,6 +85,19 @@ export class UserService {
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();
+    }
+  }
+
+  public async get(id: number): Promise<UserDto | undefined> {
+    try {
+      const user = await this.userRepository.findOne({ id: id })
+      if (user) {
+        const userDto = new UserDto(user)
+        return userDto
+      }
+
+    } catch (err) {
+      logger.error(err)
     }
   }
 }
