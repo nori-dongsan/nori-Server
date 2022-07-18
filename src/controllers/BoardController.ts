@@ -28,7 +28,7 @@ export class BoardController {
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards))
     }
 
-    // @UseBefore(verifyAccessToken)
+    @UseBefore(verifyAccessToken)
     @HttpCode(200)
     @Get("/:boardId")
     @OpenAPI({
