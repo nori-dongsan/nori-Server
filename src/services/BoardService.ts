@@ -11,18 +11,12 @@ export class BoardService {
     /**
      * 게시판 목록 조회
      */
-    public async getList(): Promise<Board[]> {
+    public async getList(page: number): Promise<Board[]> {
         return await this.boardRepository.find({
-            skip: 0,
+            skip: page - 1,
             take: 10,
             select: ["id", "title", "content"],
             relations: ["user"]
         })
-    }
-
-    public async create(boardCreateDto: BoardCreateDto): Promise<Board> {
-        const board = this.boardRepository.create(boardCreateDto)
-        await this.boardRepository.save(board)
-        return board
     }
 }
