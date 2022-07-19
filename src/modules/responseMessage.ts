@@ -32,6 +32,7 @@ const message = {
 
   // 댓글
   CREATE_COMMENT_SUCCESS: "댓글 작성 성공"
+
 };
 
 export default message;

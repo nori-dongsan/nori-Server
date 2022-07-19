@@ -57,6 +57,7 @@ export class BoardPutDto {
     content?: string
     title?: string
 }
+
 export class BoardCreateDto {
     category: string
     title: string

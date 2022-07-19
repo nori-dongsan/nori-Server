@@ -54,6 +54,27 @@ export class BoardService {
             logger.error(err)
         }
 
+
+    /**
+     * 게시글 작성
+     * @param boardCreateDto 게시판 생성 DTO
+     */
+    public async create(boardCreateDto: BoardCreateDto) {
+        const queryRunner = await getConnection().createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        try {
+            const board = this.boardRepository.create(boardCreateDto)
+            await queryRunner.manager.save(board)
+            await queryRunner.commitTransaction();
+            return board
+        } catch (err) {
+            logger.error(err);
+            await queryRunner.rollbackTransaction();
+        } finally {
+            await queryRunner.release();
+        }
     }
 
     /**
