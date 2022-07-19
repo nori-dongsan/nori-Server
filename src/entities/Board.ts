@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { BoardCommentResponseDto } from "../dtos/BoardComment";
+import { BoardDto } from "../dtos/BoardDto";
 import { BoardCreateDto } from "../dtos/BoardDto";
 import { BoardComment } from "./BoardComment";
 import { BoardImage } from "./BoardImage";
@@ -52,6 +54,7 @@ export class Board {
 
   @UpdateDateColumn()
   updatedAt: Date;
+}
 
   public toEntity(boardCreateDto: BoardCreateDto) {
     const board = new Board()

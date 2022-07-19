@@ -1,6 +1,7 @@
 import { Service } from "typedi";
 import { getConnection } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
+import { BoardDto } from "../dtos/BoardDto";
 import { BoardCreateDto } from "../dtos/BoardDto";
 import { Board } from "../entities/Board";
 import { BoardRepository } from "../repositories/BoardRepository";
@@ -19,6 +20,18 @@ export class BoardService {
             take: 10,
         })
     }
+    /**
+     * 게시물 조회
+     * @param boardId 
+     */
+    public async get(boardId: number): Promise<Board | undefined> {
+        try {
+            const board = this.boardRepository.findOne({ id: boardId }, { relations: ['boardImages', 'boardComments', 'user'] })
+            return board
+        } catch (err) {
+            logger.error(err)
+        }
+
 
     /**
      * 게시글 작성

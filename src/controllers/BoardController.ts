@@ -3,6 +3,9 @@ import { OpenAPI } from "routing-controllers-openapi";
 import message from "../modules/responseMessage";
 import statusCode from "../modules/statusCode";
 import util from "../modules/util";
+import { verifyAccessToken } from "../middlewares/AuthMiddleware";
+import { BoardResponseDto } from "../dtos/BoardDto";
+import { Board } from "../entities/Board";
 import { Response, Request } from "express";
 import { BoardService } from "../services/BoardService";
 import { UserService } from "../services/UserService";
@@ -12,7 +15,6 @@ import { User } from "../entities/User";
 import { BoardImageService } from "../services/BoardImageService";
 import { BoardImageCreateDto } from "../dtos/BoardImageDto";
 import { logger } from "../utils/Logger";
-import { verifyAccessToken } from "../middlewares/AuthMiddleware";
 
 @JsonController("/board")
 export class BoardController {
@@ -36,6 +38,32 @@ export class BoardController {
     }
 
     @UseBefore(verifyAccessToken)
+    @HttpCode(200)
+    @Get("/:boardId")
+    @OpenAPI({
+        summary: "게시글 조회",
+        description: "게시글 반환",
+        statusCode: "200"
+    })
+    public async get(
+        @Res() res: Response,
+        @Param("boardId") boardId: number
+    ): Promise<Response> {
+        const { id } = res.locals.jwtPayload;
+        const board = await this.boardService.get(boardId)
+        let author = false
+        if (board?.user.id == id) {
+            author = true
+        }
+        if (!board) {
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, message.READ_BOARD_FAIL))
+        }
+        const boardResponseDto = new BoardResponseDto(board)
+        boardResponseDto["author"] = author
+        return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boardResponseDto))
+    }
+}
+
     @HttpCode(201)
     @Post("")
     public async postBoard(
@@ -46,7 +74,6 @@ export class BoardController {
         const userId = res.locals.jwtPayload
         const { title, content } = req.body
         try {
-
             const user = await this.userService.getUser(userId)
             const boardCreateDto = new BoardCreateDto()
             boardCreateDto.title = title
