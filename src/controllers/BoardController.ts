@@ -126,7 +126,7 @@ export class BoardController {
         }
     }
 
-    // @UseBefore(verifyAccessToken)
+    @UseBefore(verifyAccessToken)
     @HttpCode(200)
     @Put("/:boardId")
     @OpenAPI({
@@ -140,11 +140,8 @@ export class BoardController {
         @Param("boardId") boardId: number,
         @UploadedFiles("imageList") files?: Express.Multer.File[]
     ) {
-        // const { id } = res.locals.jwtPayload;
         const { title, content } = req.body
         try {
-
-            // const user = await this.userService.getUser(id)
             const boardPutDto = new BoardPutDto()
             boardPutDto.boardId = boardId
             const board = await this.boardService.get(boardId)
