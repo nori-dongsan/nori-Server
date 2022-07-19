@@ -13,9 +13,9 @@ export const FriendSeed = [
     playHow: 'test',
     playHowCd: 0,
     kind: 'kind test',
-    collection: {
+    toyCollection: {
       id: 0,
-      category: 'toddle',
+      collection: 'toddle',
       createdAt: `${new Date()}`,
       updatedAt: `${new Date()}`,
     },
@@ -35,9 +35,9 @@ export const FriendSeed = [
     playHow: 'test',
     playHowCd: 0,
     kind: 'kind test',
-    collection: {
+    toyCollection: {
       id: 0,
-      category: 'toddle',
+      collection: 'toddle',
       createdAt: `${new Date()}`,
       updatedAt: `${new Date()}`,
     },
@@ -57,9 +57,9 @@ export const FriendSeed = [
     playHow: 'test',
     playHowCd: 0,
     kind: 'kind test',
-    collection: {
+    toyCollection: {
       id: 0,
-      category: 'toddle',
+      collection: 'toddle',
       createdAt: `${new Date()}`,
       updatedAt: `${new Date()}`,
     },
@@ -79,9 +79,9 @@ export const FriendSeed = [
     playHow: 'test',
     playHowCd: 0,
     kind: 'kind test',
-    collection: {
+    toyCollection: {
       id: 0,
-      category: 'toddle',
+      collection: 'toddle',
       createdAt: `${new Date()}`,
       updatedAt: `${new Date()}`,
     },
