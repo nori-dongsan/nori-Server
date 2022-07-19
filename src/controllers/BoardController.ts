@@ -36,7 +36,7 @@ export class BoardController {
     }
 
     @UseBefore(verifyAccessToken)
-    @HttpCode(200)
+    @HttpCode(201)
     @Post("")
     public async postBoard(
         @Req() req: Request,
@@ -67,14 +67,10 @@ export class BoardController {
                 boardImageCreateDto.imageLink = keyName
                 await this.boardImageService.create(boardImageCreateDto)
             })
-            return res.send(util.success(statusCode.OK, message.CREATE_BOARD_SUCCESS))
+            return res.send(util.success(statusCode.CREATED, message.CREATE_BOARD_SUCCESS))
         } catch (err) {
             logger.error(err)
             return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))
         }
     }
 }
-function BeforeUse() {
-    throw new Error("Function not implemented.");
-}
-
