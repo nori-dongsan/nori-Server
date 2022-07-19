@@ -23,7 +23,8 @@ const message = {
   FETCH_HOME_DATA_SUCCESS: "홈 데이터 조회 성공",
 
   // 게시판
-  READ_BAORD_LIST_SUCCESS: "게시물 목록 조회 성공"
+  READ_BAORD_LIST_SUCCESS: "게시물 목록 조회 성공",
+  CREATE_BOARD_SUCCESS: "게시물 생성 성공"
 };
 
 export default message;

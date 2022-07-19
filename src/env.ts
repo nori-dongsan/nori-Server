@@ -30,4 +30,9 @@ export const env = {
   swagger: {
     route: process.env.SWAGGER_ROUTE,
   },
+  s3: {
+    accessKey: process.env.AWS_ACCESS_KEY,
+    secretKey: process.env.AWS_SECRET_KEY,
+    bucketName: process.env.BUCKET_NAME
+  }
 };
