@@ -2,6 +2,7 @@ import { Board } from "../entities/Board"
 import { BoardComment } from "../entities/BoardComment"
 import { BoardImage } from "../entities/BoardImage"
 import { BoardCommentResponseDto } from "./BoardComment"
+import { User } from "../entities/User"
 
 export class BoardResponseDto {
     author: boolean
@@ -49,4 +50,10 @@ export class BoardDto {
     replyCount: number = 0
     likeCount: number = 0
     replyList: BoardCommentResponseDto[]
+
+export class BoardCreateDto {
+    category: string
+    title: string
+    content: string
+    user: User
 }
