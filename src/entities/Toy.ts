@@ -33,7 +33,7 @@ export class Toy {
 
   @IsNotEmpty()
   @Column({ name: 'month' })
-  month: number;
+  month: string;
 
   @IsNotEmpty()
   @Column({ name: 'min_month' })
@@ -69,11 +69,23 @@ export class Toy {
   })
   toyCategories: ToyCategory;
 
+  @IsNotEmpty()
+  @Column({ name: 'category' })
+  category: string;
+
+  @IsNotEmpty()
+  @Column({ name: 'category_cd' })
+  categoryCd: number;
+
   @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
     onDelete: 'CASCADE',
     // nullable: false,
   })
   toySite: ToySite;
+
+  @IsNotEmpty()
+  @Column({ name: 'toy_site_cd' })
+  toySiteCd: number;
 
   @OneToMany(() => LikeToy, (likeToy) => likeToy.toy, {
     cascade: true,

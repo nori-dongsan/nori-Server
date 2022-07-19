@@ -16,14 +16,22 @@ export class ToyCollection {
   id: number;
 
   @IsNotEmpty()
-  @Column({ name: 'toy_collection', length: 20 })
-  toyCollection: string;
+  @Column({ name: 'title', length: 20 })
+  title: string;
 
   @OneToMany(() => Toy, (toy) => toy.toyCollection, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   toys: Toy;
+
+  @IsNotEmpty()
+  @Column({ name: 'image' })
+  image: string;
+
+  @IsNotEmpty()
+  @Column({ name: 'subtitle' })
+  subtitle: string;
 
   @CreateDateColumn()
   createdAt: Date;

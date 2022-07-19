@@ -4,12 +4,12 @@ import { Response } from 'express';
 import statusCode from '../modules/statusCode';
 import util from '../modules/util';
 import message from '../modules/responseMessage';
-import { HomeService } from '../services/homeService';
+import { HomeService } from '../services/HomeService';
 import { logger } from '../utils/Logger';
 
 @JsonController('/home')
 export class HomeController {
-  constructor(private homeService: HomeService) {}
+  constructor(private homeService: HomeService) { }
 
   @HttpCode(200)
   @Get('')

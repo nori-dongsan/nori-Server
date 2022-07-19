@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ToySiteCreateDto } from '../dtos/ToySiteDto';
 import { Toy } from './Toy';
 
 @Entity({ name: 'toy_site' })
@@ -30,4 +31,11 @@ export class ToySite {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  public toEntity(toySiteCreateDto: ToySiteCreateDto) {
+    const toySite = new ToySite();
+    toySite.toySite = toySiteCreateDto.site;
+    toySite.toys = toySiteCreateDto.toys;
+    return toySite;
+  }
 }

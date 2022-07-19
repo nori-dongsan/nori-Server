@@ -18,7 +18,7 @@ export class ToyDto {
   public price: number;
 
   @IsNotEmpty()
-  public month: number;
+  public month: string;
 
   @IsNotEmpty()
   public siteUrl: string;
