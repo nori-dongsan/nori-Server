@@ -1,9 +1,8 @@
-import { Get, HttpCode, JsonController, Post, Req, Res, UploadedFiles, UseBefore } from "routing-controllers";
+import { Get, HttpCode, JsonController, Param, Post, Req, Res, UploadedFiles, UseBefore } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import message from "../modules/responseMessage";
 import statusCode from "../modules/statusCode";
 import util from "../modules/util";
-import e, { Response } from "express";
 import { BoardCommentService } from "../services/BoardCommentService";
 import { verifyAccessToken } from "../middlewares/AuthMiddleware";
 import { BoardResponseDto } from "../dtos/BoardDto";
@@ -52,8 +51,7 @@ export class BoardController {
         @Res() res: Response,
         @Param("boardId") boardId: number
     ): Promise<Response> {
-        // const { id } = res.locals.jwtPayload;
-        const id = 14
+        const { id } = res.locals.jwtPayload;
         const board = await this.boardService.get(boardId)
         let author = false
         if (board?.user.id == id) {
@@ -67,7 +65,6 @@ export class BoardController {
         boardResponseDto["author"] = author
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boardResponseDto))
     }
-}
 
     @HttpCode(201)
     @Post("")
