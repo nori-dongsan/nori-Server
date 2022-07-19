@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { CreateUserDto } from "../dtos/UserDto";
+import { CreateUserDto, UserDto } from "../dtos/UserDto";
 import { Board } from "./Board";
 import { BoardComment } from "./BoardComment";
 import { LikeToy } from "./LikeToy";
