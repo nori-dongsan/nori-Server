@@ -4,23 +4,23 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { Toy } from "./Toy";
-import { User } from "./User";
+} from 'typeorm';
+import { Toy } from './Toy';
+import { User } from './User';
 
-@Entity({ name: "like_toy" })
+@Entity({ name: 'like_toy' })
 export class LikeToy {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.likeToys, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
     nullable: false,
   })
   user: User;
 
   @ManyToOne(() => Toy, (toy) => toy.likeToys, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
     nullable: false,
   })
   toy: Toy;
