@@ -102,12 +102,12 @@ export class Toy {
   updatedAt: Date;
 
   public toDto(toyEntity: any): ToyDto[] {
-    console.log('>>>>>>>> toy', toyEntity);
     const toys: ToyDto[] = [];
 
     for (const toy of toyEntity) {
       const toyDto = new ToyDto();
 
+      console.log(toyDto);
       toyDto.image = toy.image;
       // toyDto.siteName = toy.toySite.toySite;
       toyDto.title = toy.title;

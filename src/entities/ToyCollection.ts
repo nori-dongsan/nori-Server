@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ThemeDto } from '../dtos/HomeDto';
 import { Toy } from './Toy';
 
 @Entity({ name: 'toy_collection' })
