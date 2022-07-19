@@ -11,6 +11,7 @@ import {
 import { ToyDto } from '../dtos/ToyDto';
 import { LikeToy } from './LikeToy';
 import { ToyCategory } from './ToyCategory';
+import { ToyCollection } from './ToyCollection';
 import { ToySite } from './ToySite';
 
 @Entity({ name: 'toy' })
@@ -24,7 +25,7 @@ export class Toy {
 
   @IsNotEmpty()
   @Column({ name: 'price' })
-  price: string;
+  price: number;
 
   @IsNotEmpty()
   @Column({ name: 'price_cd' })
@@ -32,7 +33,7 @@ export class Toy {
 
   @IsNotEmpty()
   @Column({ name: 'month' })
-  month: number;
+  month: string;
 
   @IsNotEmpty()
   @Column({ name: 'min_month' })
@@ -58,20 +59,33 @@ export class Toy {
   @Column({ name: 'image' })
   image: string;
 
-  @IsNotEmpty()
-  @Column({ name: 'collection', length: 20 })
-  collection: string;
+  @ManyToOne(() => ToyCollection, (ToyCollection) => ToyCollection.toys, {
+    cascade: true,
+  })
+  toyCollection: ToyCollection;
 
   @OneToMany(() => ToyCategory, (toyCategory) => toyCategory.toy, {
     cascade: true,
   })
   toyCategories: ToyCategory;
 
+  @IsNotEmpty()
+  @Column({ name: 'category' })
+  category: string;
+
+  @IsNotEmpty()
+  @Column({ name: 'category_cd' })
+  categoryCd: number;
+
   @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
     onDelete: 'CASCADE',
-    nullable: false,
+    // nullable: false,
   })
   toySite: ToySite;
+
+  @IsNotEmpty()
+  @Column({ name: 'toy_site_cd' })
+  toySiteCd: number;
 
   @OneToMany(() => LikeToy, (likeToy) => likeToy.toy, {
     cascade: true,

@@ -1,19 +1,29 @@
-import { Get, HttpCode, JsonController, Param, Req, Res, UseBefore } from "routing-controllers";
+import { Get, HttpCode, JsonController, Post, Req, Res, UploadedFiles, UseBefore } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import message from "../modules/responseMessage";
 import statusCode from "../modules/statusCode";
 import util from "../modules/util";
 import e, { Response } from "express";
-import { BoardService } from "../services/boardService";
+import { BoardCommentService } from "../services/BoardCommentService";
 import { verifyAccessToken } from "../middlewares/AuthMiddleware";
 import { BoardResponseDto } from "../dtos/BoardDto";
 import { Board } from "../entities/Board";
-import { BoardCommentService } from "../services/BoardCommentService";
+import { Response, Request } from "express";
+import { BoardService } from "../services/BoardService";
+import { UserService } from "../services/UserService";
+import s3 from "../modules/s3";
+import { BoardCreateDto } from "../dtos/BoardDto";
+import { User } from "../entities/User";
+import { BoardImageService } from "../services/BoardImageService";
+import { BoardImageCreateDto } from "../dtos/BoardImageDto";
+import { logger } from "../utils/Logger";
 
 @JsonController("/board")
 export class BoardController {
     constructor(private boardService: BoardService,
-        private boardCommentService: BoardCommentService) { }
+        private boardCommentService: BoardCommentService,
+        private userService: UserService,
+        private boardImageService: BoardImageService) { }
 
     @HttpCode(200)
     @Get("")
@@ -56,5 +66,43 @@ export class BoardController {
         const boardResponseDto = new BoardResponseDto(board, comment!)
         boardResponseDto["author"] = author
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boardResponseDto))
+    }
+}
+
+    @HttpCode(201)
+    @Post("")
+    public async postBoard(
+        @Req() req: Request,
+        @Res() res: Response,
+        @UploadedFiles("imageList") files: Express.Multer.File[]
+    ) {
+        const userId = res.locals.jwtPayload
+        const { title, content } = req.body
+        try {
+            const user = await this.userService.getUser(userId)
+            const boardCreateDto = new BoardCreateDto()
+            boardCreateDto.title = title
+            boardCreateDto.content = content
+            boardCreateDto.user = user as User
+            const board = await this.boardService.create(boardCreateDto)
+            files.map(async (file) => {
+                const keyName = `${Date.now()}_${file.originalname}`
+                const params = {
+                    Key: keyName,
+                    Bucket: 'nori-community',
+                    Body: file.buffer,
+                    ACL: "public-read"
+                }
+                await s3.upload(params).promise()
+                const boardImageCreateDto = new BoardImageCreateDto()
+                boardImageCreateDto.board = board!
+                boardImageCreateDto.imageLink = keyName
+                await this.boardImageService.create(boardImageCreateDto)
+            })
+            return res.send(util.success(statusCode.CREATED, message.CREATE_BOARD_SUCCESS))
+        } catch (err) {
+            logger.error(err)
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))
+        }
     }
 }
