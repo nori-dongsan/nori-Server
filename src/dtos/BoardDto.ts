@@ -55,7 +55,7 @@ export class BoardDto {
 export class BoardPutDto {
     boardId: number
     content?: string
-    imageList?: BoardImage[]
+    title?: string
 }
 export class BoardCreateDto {
     category: string

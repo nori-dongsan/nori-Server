@@ -1,4 +1,4 @@
-import { Delete, Get, HttpCode, JsonController, Param, Req, Res, UseBefore } from "routing-controllers";
+import { Delete, Get, HttpCode, JsonController, Param, Post, Put, Req, Res, UploadedFiles, UseBefore } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import message from "../modules/responseMessage";
 import statusCode from "../modules/statusCode";
@@ -7,7 +7,7 @@ import { Response, Request } from "express";
 import { BoardService } from "../services/BoardService";
 import { UserService } from "../services/UserService";
 import s3 from "../modules/s3";
-import { BoardCreateDto } from "../dtos/BoardDto";
+import { BoardCreateDto, BoardPutDto } from "../dtos/BoardDto";
 import { User } from "../entities/User";
 import { BoardImageService } from "../services/BoardImageService";
 import { BoardImageCreateDto } from "../dtos/BoardImageDto";
@@ -16,13 +16,13 @@ import { verifyAccessToken } from "../middlewares/AuthMiddleware";
 import { BoardResponseDto } from "../dtos/BoardDto";
 import { Board } from "../entities/Board";
 import { BoardCommentService } from "../services/BoardCommentService";
-import { logger } from "../utils/Logger";
 
 @JsonController("/board")
 export class BoardController {
     constructor(private boardService: BoardService,
         private userService: UserService,
-        private boardImageService: BoardImageService) { }
+        private boardImageService: BoardImageService,
+        private boardCommentService: BoardCommentService) { }
 
     @HttpCode(200)
     @Get("")
@@ -47,11 +47,11 @@ export class BoardController {
         @Res() res: Response,
         @UploadedFiles("imageList") files: Express.Multer.File[]
     ) {
-        const userId = res.locals.jwtPayload
+        const { id } = res.locals.jwtPayload
         const { title, content } = req.body
         try {
 
-            const user = await this.userService.getUser(userId)
+            const user = await this.userService.getUser(id)
             const boardCreateDto = new BoardCreateDto()
             boardCreateDto.title = title
             boardCreateDto.content = content
@@ -120,6 +120,58 @@ export class BoardController {
         try {
             await this.boardService.delete(boardId)
             return res.status(statusCode.OK).send(util.success(statusCode.OK, message.DELETE_BOARD_SUCCESS))
+        } catch (err) {
+            logger.error(err)
+            return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))
+        }
+    }
+
+    // @UseBefore(verifyAccessToken)
+    @HttpCode(200)
+    @Put("/:boardId")
+    @OpenAPI({
+        summary: "게시글 수정",
+        description: "게시글 수정",
+        statusCode: "200"
+    })
+    public async put(
+        @Res() res: Response,
+        @Req() req: Request,
+        @Param("boardId") boardId: number,
+        @UploadedFiles("imageList") files?: Express.Multer.File[]
+    ) {
+        // const { id } = res.locals.jwtPayload;
+        const { title, content } = req.body
+        try {
+
+            // const user = await this.userService.getUser(id)
+            const boardPutDto = new BoardPutDto()
+            boardPutDto.boardId = boardId
+            const board = await this.boardService.get(boardId)
+            if (title) boardPutDto.title = title
+            else boardPutDto.title = board!.title
+            if (content) boardPutDto.content = content
+            else boardPutDto.content = board!.content
+
+            await this.boardService.put(boardPutDto)
+            if (files) {
+                await this.boardImageService.delete(board!)
+                files.map(async (file) => {
+                    const keyName = `${Date.now()}_${file.originalname}`
+                    const params = {
+                        Key: keyName,
+                        Bucket: 'nori-community',
+                        Body: file.buffer,
+                        ACL: "public-read"
+                    }
+                    await s3.upload(params).promise()
+                    const boardImageCreateDto = new BoardImageCreateDto()
+                    boardImageCreateDto.board = board!
+                    boardImageCreateDto.imageLink = keyName
+                    await this.boardImageService.create(boardImageCreateDto)
+                })
+            }
+            return res.send(util.success(statusCode.CREATED, message.CREATE_BOARD_SUCCESS))
         } catch (err) {
             logger.error(err)
             return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))

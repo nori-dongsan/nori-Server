@@ -74,7 +74,7 @@ export class BoardService {
      */
     public async put(boardPutDto: BoardPutDto) {
         try {
-            await this.boardRepository.update(boardPutDto.boardId, { content: boardPutDto.content, boardImages: boardPutDto.imageList })
+            await this.boardRepository.update(boardPutDto.boardId, { content: boardPutDto.content, title: boardPutDto.title })
         } catch (err) {
             logger.error(err)
         }
