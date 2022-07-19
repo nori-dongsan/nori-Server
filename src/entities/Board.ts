@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -7,30 +7,30 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { BoardComment } from "./BoardComment";
-import { BoardImage } from "./BoardImage";
-import { User } from "./User";
+} from 'typeorm';
+import { BoardComment } from './BoardComment';
+import { BoardImage } from './BoardImage';
+import { User } from './User';
 
-@Entity({ name: "board" })
+@Entity({ name: 'board' })
 export class Board {
   @PrimaryGeneratedColumn()
   id: number;
 
   @IsNotEmpty()
-  @Column({ name: "section", length: 20 })
+  @Column({ name: 'section', length: 20 })
   section: string;
 
   @IsNotEmpty()
-  @Column({ name: "title", length: 50 })
+  @Column({ name: 'title', length: 50 })
   title: string;
 
   @IsNotEmpty()
-  @Column({ name: "content", type: "text" })
+  @Column({ name: 'content', type: 'text' })
   content: string;
 
   @ManyToOne(() => User, (user) => user.boards, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
     nullable: false,
   })
   user: User;
@@ -38,12 +38,12 @@ export class Board {
   @OneToMany(() => BoardComment, (boardComment) => boardComment.board, {
     cascade: true,
   })
-  boardComments: BoardComment;
+  boardComments: BoardComment[];
 
   @OneToMany(() => BoardImage, (boardImages) => boardImages.board, {
     cascade: true,
   })
-  boardImages: BoardImage;
+  boardImages: BoardImage[];
 
   @CreateDateColumn()
   createdAt: Date;
