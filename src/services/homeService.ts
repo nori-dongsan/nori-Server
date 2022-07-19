@@ -14,11 +14,11 @@ export class HomeService {
     let homeToys = new ResponseHomeDto();
 
     // TODO: 희지가 스프레드 시트 다 적으면 그에 맞게 데이터 넣기
-    homeToys.trending = await this.fetchToys([0, 1, 2]);
+    homeToys.trending = await this.fetchToys([1193, 1269, 1028, 1194]);
     homeToys.theme = await this.fetchThemes();
-    homeToys.noriPick = await this.fetchToys([0, 1, 2, 3]);
-    homeToys.senses = await this.fetchToys([0, 1, 2, 3]);
-    homeToys.smart = await this.fetchToys([0, 1, 2, 3]);
+    homeToys.noriPick = await this.fetchToys([1233, 1431, 1339, 1276]);
+    homeToys.senses = await this.fetchToys([1081, 1356, 1311, 1308]);
+    homeToys.smart = await this.fetchToys([1032, 1191, 1159, 1169]);
 
     return homeToys;
   }
@@ -27,8 +27,13 @@ export class HomeService {
   private async fetchToys(ids: any[]): Promise<ToyDto[] | null> {
     try {
       const toys = await this.homeRepository.findByIds(ids, {
-        relations: ['toySite'],
-        select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
+        select: ['image', 'toySiteCd', 'title', 'price', 'month', 'link'],
+        join: {
+          alias: 'toy',
+          leftJoinAndSelect: {
+            ToySite: 'toy.toySiteCd',
+          },
+        },
       });
 
       // 빈 배열이면 null 반환
