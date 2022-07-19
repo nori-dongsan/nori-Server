@@ -1,6 +1,8 @@
 import { Service } from "typedi";
+import { getConnection } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { BoardDto, BoardPutDto } from "../dtos/BoardDto";
+import { BoardCreateDto } from "../dtos/BoardDto";
 import { Board } from "../entities/Board";
 import { BoardRepository } from "../repositories/BoardRepository";
 import { logger } from "../utils/Logger";
@@ -15,8 +17,30 @@ export class BoardService {
     public async getList(): Promise<Board[]> {
         return await this.boardRepository.find({
             skip: 0,
-            take: 10
+            take: 10,
         })
+    }
+
+    /**
+     * 게시글 작성
+     * @param boardCreateDto 게시판 생성 DTO
+     */
+    public async create(boardCreateDto: BoardCreateDto) {
+        const queryRunner = await getConnection().createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        try {
+            const board = this.boardRepository.create(boardCreateDto)
+            await queryRunner.manager.save(board)
+            await queryRunner.commitTransaction();
+            return board
+        } catch (err) {
+            logger.error(err);
+            await queryRunner.rollbackTransaction();
+        } finally {
+            await queryRunner.release();
+        }
     }
     /**
      * 게시물 조회
