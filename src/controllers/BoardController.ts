@@ -1,4 +1,4 @@
-import { Get, HttpCode, JsonController, Post, Req, Res, UploadedFiles, UseBefore } from "routing-controllers";
+import { Get, HttpCode, JsonController, Post, Req, Res, UploadedFiles, UseBefore, QueryParam } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import message from "../modules/responseMessage";
 import statusCode from "../modules/statusCode";
@@ -34,8 +34,9 @@ export class BoardController {
     })
     public async getList(
         @Res() res: Response
+        @QueryParam("page") page: number
     ): Promise<Response> {
-        const boards = await this.boardService.getList()
+        const boards = await this.boardService.getList(page)
 
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards))
     }

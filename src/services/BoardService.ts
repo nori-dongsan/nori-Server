@@ -1,8 +1,7 @@
 import { Service } from "typedi";
 import { getConnection } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { BoardDto } from "../dtos/BoardDto";
-import { BoardCreateDto } from "../dtos/BoardDto";
+import { BoardDto, BoardCreateDto } from "../dtos/BoardDto";
 import { Board } from "../entities/Board";
 import { BoardRepository } from "../repositories/BoardRepository";
 import { logger } from "../utils/Logger";
@@ -14,10 +13,12 @@ export class BoardService {
     /**
      * 게시판 목록 조회
      */
-    public async getList(): Promise<Board[]> {
+    public async getList(page: number): Promise<Board[]> {
         return await this.boardRepository.find({
-            skip: 0,
+            skip: page - 1,
             take: 10,
+            select: ["id", "title", "content"],
+            relations: ["user"]
         })
     }
     /**
