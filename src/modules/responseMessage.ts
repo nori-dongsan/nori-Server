@@ -28,6 +28,7 @@ const message = {
   READ_BOARD_FAIL: "게시물 조회 실패",
   READ_BOARD_SUCCESS: "게시물 조회 성공",
   DELETE_BOARD_SUCCESS: "게시물 삭제 성공",
+  PATCH_BOARD_SUCCESS: "게시물 수정 성공",
 
   // 댓글
   CREATE_COMMENT_SUCCESS: "댓글 작성 성공"
