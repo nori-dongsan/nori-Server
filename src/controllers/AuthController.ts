@@ -29,7 +29,7 @@ export class AuthController {
   constructor(
     private userService: UserService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   @HttpCode(200)
   @Post('/login')

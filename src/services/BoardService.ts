@@ -26,7 +26,7 @@ export class BoardService {
      */
     public async get(boardId: number): Promise<Board | undefined> {
         try {
-            const board = this.boardRepository.findOne({ id: boardId }, { relations: ['boardImages', 'boardComments', 'user'] })
+            const board = await this.boardRepository.findOne({ id: boardId }, { relations: ['boardImages', 'boardComments', 'user'] })
             return board
         } catch (err) {
             logger.error(err)
