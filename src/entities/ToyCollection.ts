@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ThemeDto } from '../dtos/HomeDto';
 import { Toy } from './Toy';
 
 @Entity({ name: 'toy_collection' })
@@ -38,4 +39,10 @@ export class ToyCollection {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  public toTitleString(themeEntity: any): string {
+    const theme = themeEntity.title;
+
+    return theme;
+  }
 }

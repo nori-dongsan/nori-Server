@@ -18,7 +18,6 @@ export class HomeService {
   public async fetchList(): Promise<ResponseHomeDto> {
     let homeToys = new ResponseHomeDto();
 
-    // TODO: 희지가 스프레드 시트 다 적으면 그에 맞게 데이터 넣기
     homeToys.trending = await this.fetchToys([1193, 1269, 1028, 1194]);
     homeToys.theme = await this.fetchThemes();
     homeToys.noriPick = await this.fetchToys([1233, 1431, 1339, 1276]);
