@@ -76,7 +76,7 @@ export class ToyService {
       const toyCategoryList = await this.toyRepository
         .createQueryBuilder('toy')
         .leftJoinAndMapOne(
-          'toy.toySiteCd',
+          'toy.toySite',
           ToySite,
           'toySite',
           'toy.toySiteCd = toySite.id'
@@ -88,6 +88,8 @@ export class ToyService {
         const minMonth = toyData.minMonth;
         const maxMonth = toyData.maxMonth;
 
+        console.log(toyData);
+
         for (let month = minMonth; month <= maxMonth; month++) {
           if (!monthList.includes(month)) monthList.push(month);
         }
@@ -98,8 +100,8 @@ export class ToyService {
         if (!playHowList.includes(toyData.playHowCd))
           playHowList.push(toyData.playHowCd);
 
-        if (!storeList.includes(toyData.toySiteCd.toySite))
-          storeList.push(toyData.toySiteCd.toySite);
+        if (!storeList.includes(toyData.toySite.toySite))
+          storeList.push(toyData.toySite.toySite);
       });
 
       filterData.month = monthList.sort();
