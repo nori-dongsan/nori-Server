@@ -1,32 +1,41 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { Toy } from "./Toy";
+} from 'typeorm';
+import { ToySiteCreateDto } from '../dtos/ToySiteDto';
+import { Toy } from './Toy';
 
-@Entity({ name: "toy_site" })
+@Entity({ name: 'toy_site' })
 export class ToySite {
   @PrimaryGeneratedColumn()
   id: number;
 
   @IsNotEmpty()
-  @Column({ name: "toy_site", length: 20 })
+  @Column({ name: 'toy_site', length: 20 })
   toySite: string;
 
-  @ManyToOne(() => Toy, (toy) => toy.toySites, {
-    onDelete: "CASCADE",
+  @OneToMany(() => Toy, (toy) => toy.toySiteCd, {
+    onDelete: 'CASCADE',
     nullable: false,
   })
-  toy: Toy;
+  toys: Toy;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  public toEntity(toySiteCreateDto: ToySiteCreateDto) {
+    const toySite = new ToySite();
+    toySite.toySite = toySiteCreateDto.site;
+    toySite.toys = toySiteCreateDto.toys;
+    return toySite;
+  }
 }
