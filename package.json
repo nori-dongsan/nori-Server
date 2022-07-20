@@ -5,6 +5,7 @@
     "node": "16.x",
     "yarn": "1.x"
   },
+  "type": "module",
   "description": "nori-server with Express",
   "main": "index.js",
   "license": "MIT",
