@@ -69,13 +69,13 @@ export class BoardController {
     @Res() res: Response,
     @Param('boardId') boardId: number
   ): Promise<Response> {
-    // const { id } = res.locals.jwtPayload;
-    const id = 14;
+        const { id } = res.locals.jwtPayload;
     const board = await this.boardService.get(boardId);
     let author = false;
     if (board?.user.id == id) {
       author = true;
     }
+
     if (!board) {
       return res
         .status(statusCode.BAD_REQUEST)
