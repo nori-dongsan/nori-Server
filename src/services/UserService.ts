@@ -112,4 +112,17 @@ export class UserService {
       logger.error(err);
     }
   }
+
+  public async getUser(userId: number) {
+    try {
+      const user = await this.userRepository.findOne({ id: userId })
+      if (user) {
+        return user
+      } else {
+        return null
+      }
+    } catch (err) {
+      logger.error(err)
+    }
+  }
 }

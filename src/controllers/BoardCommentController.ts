@@ -1,4 +1,4 @@
-import { Body, BodyParam, HttpCode, Post, Res } from "routing-controllers"
+import { Body, BodyParam, HttpCode, Post, Res, UseBefore } from "routing-controllers"
 import { OpenAPI } from "routing-controllers-openapi"
 import { JsonController } from "routing-controllers/decorator/JsonController"
 import { BoardCommentCreateDto, BoardCommentRequsetDto } from "../dtos/BoardCommentDto"
@@ -9,6 +9,7 @@ import { UserService } from "../services/UserService"
 import { Response } from "express"
 import message from "../modules/responseMessage"
 import util from "../modules/util"
+import { verifyAccessToken } from "../middlewares/AuthMiddleware"
 
 @JsonController("/board/comment")
 export class BoardCommentController {
@@ -16,6 +17,7 @@ export class BoardCommentController {
         private userService: UserService,
         private boardService: BoardService) { }
 
+    @UseBefore(verifyAccessToken)
     @HttpCode(200)
     @Post("")
     @OpenAPI({
@@ -27,7 +29,7 @@ export class BoardCommentController {
         @Res() res: Response,
         @Body() body: BoardCommentRequsetDto,
     ): Promise<Response> {
-        const id = 14
+        const { id } = res.locals.jwtPayload
         const boardCommentCreateDto = new BoardCommentCreateDto()
         const user = await this.userService.get(id)
         const { content, boardId } = body

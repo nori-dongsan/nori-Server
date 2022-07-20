@@ -52,6 +52,12 @@ export class BoardDto {
   replyList: BoardCommentResponseDto[];
 }
 
+export class BoardPutDto {
+    boardId: number
+    content?: string
+    title?: string
+}
+
 export class BoardCreateDto {
   category: string;
   title: string;

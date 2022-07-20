@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { getConnection } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { BoardDto, BoardCreateDto } from '../dtos/BoardDto';
+import { BoardDto, BoardCreateDto, BoardPutDto } from '../dtos/BoardDto';
 import { Board } from '../entities/Board';
 import { BoardRepository } from '../repositories/BoardRepository';
 import { logger } from '../utils/Logger';
@@ -58,4 +58,28 @@ export class BoardService {
       await queryRunner.release();
     }
   }
+
+    /**
+     * 게시물 삭제
+     * @param boardId 
+     */
+    public async delete(boardId: number) {
+        try {
+            await this.boardRepository.delete({ id: boardId })
+        } catch (err) {
+            logger.error(err)
+        }
+    }
+
+    /**
+     * 게시물 수정
+     * @param boardPutDto 
+     */
+    public async put(boardPutDto: BoardPutDto) {
+        try {
+            await this.boardRepository.update(boardPutDto.boardId, { content: boardPutDto.content, title: boardPutDto.title })
+        } catch (err) {
+            logger.error(err)
+        }
+    }
 }
