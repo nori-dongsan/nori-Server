@@ -18,6 +18,7 @@ const message = {
   CREATE_USER_FAIL: '유저 생성 실패',
   LOGIN_SUCCESS: '로그인 성공',
   DUPLICATE_NICKNAME: '이미 사용중인 닉네임입니다',
+  AVAILABLE_NICKNAME: '사용가능한 닉네임입니다.',
 
   // 장난감
   READ_TOY_SUCCESS: '장난감 조건 조회 성공',
