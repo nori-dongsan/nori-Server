@@ -18,19 +18,25 @@ const message = {
   CREATE_USER_FAIL: '유저 생성 실패',
   LOGIN_SUCCESS: '로그인 성공',
   DUPLICATE_NICKNAME: '이미 사용중인 닉네임입니다',
+  AVAILABLE_NICKNAME: '사용가능한 닉네임입니다.',
+
+  // 장난감
+  READ_TOY_SUCCESS: '장난감 조건 조회 성공',
 
   // 홈
-  FETCH_HOME_DATA_SUCCESS: "홈 데이터 조회 성공",
+  FETCH_HOME_DATA_SUCCESS: '홈 데이터 조회 성공',
+
+  // 컬렉션
+  FETCH_COLLECTION_DATA_SUCCESS: '장난감 컬렉션 리스트 조회 성공',
 
   // 게시판
-  READ_BAORD_LIST_SUCCESS: "게시물 목록 조회 성공",
-  READ_BOARD_FAIL: "게시물 조회 실패",
-  READ_BOARD_SUCCESS: "게시물 조회 성공",
-  CREATE_BOARD_SUCCESS: "게시물 생성 성공",
+  READ_BAORD_LIST_SUCCESS: '게시물 목록 조회 성공',
+  READ_BOARD_FAIL: '게시물 조회 실패',
+  READ_BOARD_SUCCESS: '게시물 조회 성공',
+  CREATE_BOARD_SUCCESS: '게시물 생성 성공',
 
   // 댓글
-  CREATE_COMMENT_SUCCESS: "댓글 작성 성공"
-
+  CREATE_COMMENT_SUCCESS: '댓글 작성 성공',
 };
 
 export default message;

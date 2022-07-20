@@ -29,7 +29,7 @@ export class AuthController {
   constructor(
     private userService: UserService,
     private authService: AuthService
-  ) { }
+  ) {}
 
   @HttpCode(200)
   @Post('/login')
@@ -68,6 +68,10 @@ export class AuthController {
           refreshToken: generateRefreshToken(user),
           isSignup: false,
         };
+        await this.authService.saveRefreshToken(
+          user,
+          responseUserDto.refreshToken
+        );
 
         // 회원가입을 완료한 유저인지 확인
         if (user.nickname) {
@@ -133,7 +137,7 @@ export class AuthController {
    * Error 3. Internal Server Error
    */
   @UseBefore(verifyAccessToken)
-  public async updateNickname(
+  public async signup(
     @Req() req: Request,
     @Res() res: Response
   ): Promise<Response> {
@@ -162,6 +166,59 @@ export class AuthController {
       return res
         .status(statusCode.OK)
         .send(util.success(statusCode.OK, message.CREATE_USER));
+    } catch (error) {
+      logger.error(error);
+      console.log(error);
+
+      // Error 3
+      return res
+        .status(statusCode.INTERNAL_SERVER_ERROR)
+        .send(
+          util.fail(
+            statusCode.INTERNAL_SERVER_ERROR,
+            message.INTERNAL_SERVER_ERROR
+          )
+        );
+    }
+  }
+
+  @HttpCode(200)
+  @Post('/nickname')
+  @OpenAPI({
+    summary: '유저 닉네임 중복확인',
+    description: '유저의 닉네임 확인 api',
+    statusCode: '200',
+  })
+  /**
+   * Error 1. 닉네임이 없을 경우
+   * Error 2. 닉네임이 중복될 경우
+   */
+  public async nicknameCheck(
+    @Req() req: Request,
+    @Res() res: Response
+  ): Promise<Response> {
+    const { nickname } = req.body;
+
+    // Error 1
+    if (!nickname) {
+      return res
+        .status(statusCode.BAD_REQUEST)
+        .send(util.fail(statusCode.BAD_REQUEST, message.NULL_VALUE));
+    }
+
+    try {
+      const user = await this.userService.findByNickname(nickname);
+
+      // Error 2
+      if (user) {
+        return res
+          .status(statusCode.CONFLICT)
+          .send(util.fail(statusCode.CONFLICT, message.DUPLICATE_NICKNAME));
+      }
+
+      return res
+        .status(statusCode.CREATED)
+        .send(util.success(statusCode.CREATED, message.AVAILABLE_NICKNAME));
     } catch (error) {
       logger.error(error);
       console.log(error);
