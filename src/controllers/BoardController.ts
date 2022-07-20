@@ -90,7 +90,10 @@ export class BoardController {
                 boardImageCreateDto.imageLink = keyName
                 await this.boardImageService.create(boardImageCreateDto)
             })
-            return res.send(util.success(statusCode.CREATED, message.CREATE_BOARD_SUCCESS))
+            const result = {
+                boardId: board?.id
+            }
+            return res.send(util.success(statusCode.CREATED, message.CREATE_BOARD_SUCCESS, result))
         } catch (err) {
             logger.error(err)
             return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))
@@ -119,7 +122,7 @@ export class BoardController {
             return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, message.READ_BOARD_FAIL))
         }
         const comment = await this.boardCommentService.getListByBoard(board)
-        const boardResponseDto = new BoardResponseDto(board, comment!)
+        const boardResponseDto = new BoardResponseDto(board, comment!, id)
         boardResponseDto["author"] = author
         return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boardResponseDto))
     }
@@ -187,7 +190,10 @@ export class BoardController {
                     await this.boardImageService.create(boardImageCreateDto)
                 })
             }
-            return res.status(statusCode.OK).send(util.success(statusCode.OK, message.FETCH_HOME_DATA_SUCCESS))
+            const result = {
+                boardId: board?.id
+            }
+            return res.status(statusCode.OK).send(util.success(statusCode.OK, message.FETCH_HOME_DATA_SUCCESS, result))
         } catch (err) {
             logger.error(err)
             return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))

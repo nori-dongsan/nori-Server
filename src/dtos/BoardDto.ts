@@ -16,7 +16,7 @@ export class BoardResponseDto {
   likeCount: number = 0;
   replyList: BoardCommentResponseDto[];
 
-  constructor(board: Board, comment: BoardComment[]) {
+  constructor(board: Board, comment: BoardComment[], userId: number) {
     this.category = board.section;
     this.title = board.title;
     this.userNickname = board.user.nickname;
@@ -29,7 +29,16 @@ export class BoardResponseDto {
     this.replyCount = 0;
     this.likeCount = 0;
     const commentList = comment.map((value) => {
+      if (value.user.id == userId) {
+        return <BoardCommentResponseDto>{
+          author: true,
+          userNickname: value.user.nickname,
+          content: value.content,
+          createAt: value.createdAt,
+        };
+      }
       return <BoardCommentResponseDto>{
+        author: false,
         userNickname: value.user.nickname,
         content: value.content,
         createAt: value.createdAt,
@@ -53,9 +62,9 @@ export class BoardDto {
 }
 
 export class BoardPutDto {
-    boardId: number
-    content?: string
-    title?: string
+  boardId: number
+  content?: string
+  title?: string
 }
 
 export class BoardCreateDto {
