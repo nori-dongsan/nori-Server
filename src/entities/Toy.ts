@@ -107,9 +107,8 @@ export class Toy {
     for (const toy of toyEntity) {
       const toyDto = new ToyDto();
 
-      console.log(toyDto);
       toyDto.image = toy.image;
-      // toyDto.siteName = toy.toySite.toySite;
+      toyDto.siteName = toy.toySiteCd.toySite;
       toyDto.title = toy.title;
       toyDto.price = toy.price;
       toyDto.month = toy.month;

@@ -42,8 +42,6 @@ export class HomeService {
         .whereInIds(ids)
         .getMany();
 
-      console.log(toys);
-
       // 빈 배열이면 null 반환
       if (!toys) {
         return null;
