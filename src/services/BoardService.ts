@@ -41,7 +41,6 @@ export class BoardService {
    * 게시글 작성
    * @param boardCreateDto 게시판 생성 DTO
    */
-
   public async create(boardCreateDto: BoardCreateDto) {
     const queryRunner = await getConnection().createQueryRunner();
     await queryRunner.connect();

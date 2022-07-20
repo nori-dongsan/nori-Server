@@ -8,7 +8,7 @@ import { logger } from '../utils/Logger';
 
 @Service()
 export class UserService {
-  constructor(@InjectRepository() private userRepository: UserRepository) { }
+  constructor(@InjectRepository() private userRepository: UserRepository) {}
 
   /**
    * 사용자를 생성한다.
