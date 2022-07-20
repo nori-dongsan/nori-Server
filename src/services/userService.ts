@@ -8,7 +8,7 @@ import { logger } from '../utils/Logger';
 
 @Service()
 export class UserService {
-  constructor(@InjectRepository() private userRepository: UserRepository) { }
+  constructor(@InjectRepository() private userRepository: UserRepository) {}
 
   /**
    * 사용자를 생성한다.
@@ -37,14 +37,16 @@ export class UserService {
 
   public async getUser(userId: number) {
     try {
-      const user = await this.userRepository.findOne({ id: userId })
+      const user = await this.userRepository.findOne({ id: userId });
       if (user) {
-        return user
+        return user;
       } else {
-        return null
+        return null;
       }
     } catch (err) {
-      logger.error(err)
+      logger.error(err);
+    }
+  }
 
   /**
    * 닉네임으로 사용자를 조회한다.
@@ -101,14 +103,13 @@ export class UserService {
 
   public async get(id: number): Promise<UserDto | undefined> {
     try {
-      const user = await this.userRepository.findOne({ id: id })
+      const user = await this.userRepository.findOne({ id: id });
       if (user) {
-        const userDto = new UserDto(user)
-        return userDto
+        const userDto = new UserDto(user);
+        return userDto;
       }
-
     } catch (err) {
-      logger.error(err)
+      logger.error(err);
     }
   }
 

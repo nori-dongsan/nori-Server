@@ -1,43 +1,82 @@
-import { Delete, Get, HttpCode, JsonController, Param, Post, Put, Req, Res, UploadedFiles, UseBefore, QueryParam } from "routing-controllers";
-import { OpenAPI } from "routing-controllers-openapi";
-import message from "../modules/responseMessage";
-import statusCode from "../modules/statusCode";
-import util from "../modules/util";
-import { Response, Request } from "express";
-import { BoardService } from "../services/BoardService";
-import { UserService } from "../services/UserService";
-import s3 from "../modules/s3";
-import { BoardCreateDto, BoardPutDto } from "../dtos/BoardDto";
-import { User } from "../entities/User";
-import { BoardImageService } from "../services/BoardImageService";
-import { BoardImageCreateDto } from "../dtos/BoardImageDto";
-import { logger } from "../utils/Logger";
+import {
+  Delete,
+  Get,
+  HttpCode,
+  JsonController,
+  Post,
+  Put,
+  Req,
+  Res,
+  UploadedFiles,
+  UseBefore,
+  QueryParam,
+  Param,
+} from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
+import message from '../modules/responseMessage';
+import statusCode from '../modules/statusCode';
+import util from '../modules/util';
+import e, { Response, Request } from 'express';
+import { BoardCommentService } from '../services/BoardCommentService';
+import { verifyAccessToken } from '../middlewares/AuthMiddleware';
+import { BoardResponseDto } from '../dtos/BoardDto';
+import { Board } from '../entities/Board';
+import { BoardService } from '../services/BoardService';
+import { UserService } from '../services/UserService';
+import s3 from '../modules/s3';
+import { BoardCreateDto, BoardPutDto } from '../dtos/BoardDto';
+import { User } from '../entities/User';
+import { BoardImageService } from '../services/BoardImageService';
+import { BoardImageCreateDto } from '../dtos/BoardImageDto';
+import { logger } from '../utils/Logger';
 import { BoardCommentService } from "../services/BoardCommentService";
-import { verifyAccessToken } from "../middlewares/AuthMiddleware";
-import { BoardResponseDto } from "../dtos/BoardDto";
-import { Board } from "../entities/Board";
 
-@JsonController("/board")
+@JsonController('/board')
 export class BoardController {
-    constructor(private boardService: BoardService,
-        private boardCommentService: BoardCommentService,
-        private userService: UserService,
-        private boardImageService: BoardImageService) { }
+  constructor(
+    private boardService: BoardService,
+    private boardCommentService: BoardCommentService,
+    private userService: UserService,
+    private boardImageService: BoardImageService
+  ) {}
 
-    @HttpCode(200)
-    @Get("")
-    @OpenAPI({
-        summary: "게시판 목록 조회",
-        description: "게시물 리스트 반환",
-        statusCode: "200"
-    })
-    public async getList(
-        @Res() res: Response,
-        @QueryParam("page") page: number
-    ): Promise<Response> {
-        const boards = await this.boardService.getList(page)
+  @HttpCode(200)
+  @Get('')
+  @OpenAPI({
+    summary: '게시판 목록 조회',
+    description: '게시물 리스트 반환',
+    statusCode: '200',
+  })
+  public async getList(
+    @Res() res: Response,
+    @QueryParam('page') page: number
+  ): Promise<Response> {
+    const boards = await this.boardService.getList(page);
 
-        return res.status(statusCode.CREATED).send(util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards))
+    return res
+      .status(statusCode.CREATED)
+      .send(
+        util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards)
+      );
+  }
+
+  @UseBefore(verifyAccessToken)
+  @HttpCode(200)
+  @Get('/:boardId')
+  @OpenAPI({
+    summary: '게시글 조회',
+    description: '게시글 반환',
+    statusCode: '200',
+  })
+  public async get(
+    @Res() res: Response,
+    @Param('boardId') boardId: number
+  ): Promise<Response> {
+        const { id } = res.locals.jwtPayload;
+    const board = await this.boardService.get(boardId);
+    let author = false;
+    if (board?.user.id == id) {
+      author = true;
     }
 
     @UseBefore(verifyAccessToken)
