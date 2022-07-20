@@ -13,6 +13,7 @@
     "dev": "nodemon --watch 'src/**/*' --exec ts-node src/server.ts",
     "start": "node src/server.ts",
     "build": "tsc",
+    "postinstall": "npm run build",
     "test": "jest --coverage --verbose",
     "test:clear": "jest --clearCache"
   },
