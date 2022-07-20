@@ -34,13 +34,6 @@ export class CollectionService {
     order: 'ASC' | 'DESC'
   ): Promise<ToyDto[] | null> {
     try {
-      // const toys = await this.collectionRepository.find({
-      //   relations: ['toySite', 'toyCollection'],
-      //   select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
-      //   where: { toyCollection: { id: themeId } },
-      //   order: { price: order },
-      // });
-
       const toys = await this.collectionRepository
         .createQueryBuilder('toy')
         .leftJoinAndMapOne(
@@ -58,8 +51,6 @@ export class CollectionService {
         .where('toyCollection.id = :themeId', { themeId: themeId })
         .orderBy('toy.price', order)
         .getMany();
-
-      console.log(toys);
 
       // 빈 배열이면 null 반환
       if (!toys) {
