@@ -7,13 +7,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { BoardCommentResponseDto } from '../dtos/BoardComment';
-import { BoardDto } from '../dtos/BoardDto';
-import { BoardCreateDto } from '../dtos/BoardDto';
-import { BoardComment } from './BoardComment';
-import { BoardImage } from './BoardImage';
-import { User } from './User';
+} from "typeorm";
+import { BoardCommentResponseDto } from "../dtos/BoardComment";
+import { BoardDto } from "../dtos/BoardDto";
+import { BoardCreateDto } from "../dtos/BoardDto";
+import { BoardComment } from "./BoardComment";
+import { BoardImage } from "./BoardImage";
+import { User } from "./User";
+
 
 @Entity({ name: 'board' })
 export class Board {
@@ -59,5 +60,13 @@ export class Board {
     board.title = boardCreateDto.title;
     board.content = boardCreateDto.content;
     board.user = boardCreateDto.user;
+  }
+}
+
+  public toEntity(boardCreateDto: BoardCreateDto) {
+    const board = new Board()
+    board.title = boardCreateDto.title
+    board.content = boardCreateDto.content
+    board.user = boardCreateDto.user
   }
 }
