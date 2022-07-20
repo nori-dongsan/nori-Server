@@ -68,6 +68,10 @@ export class AuthController {
           refreshToken: generateRefreshToken(user),
           isSignup: false,
         };
+        await this.authService.saveRefreshToken(
+          user,
+          responseUserDto.refreshToken
+        );
 
         // 회원가입을 완료한 유저인지 확인
         if (user.nickname) {
