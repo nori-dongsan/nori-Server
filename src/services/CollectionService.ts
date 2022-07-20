@@ -6,12 +6,14 @@ import { Toy } from '../entities/Toy';
 import { ToyCollection } from '../entities/ToyCollection';
 import { ToySite } from '../entities/ToySite';
 import { CollectionRepository } from '../repositories/CollectionRepository';
+import { ThemeRepository } from '../repositories/ThemeRepository';
 import { logger } from '../utils/Logger';
 
 @Service()
 export class CollectionService {
   constructor(
-    @InjectRepository() private collectionRepository: CollectionRepository
+    @InjectRepository() private collectionRepository: CollectionRepository,
+    @InjectRepository() private themeRepository: ThemeRepository
   ) {}
 
   public async fetchList(
@@ -20,7 +22,7 @@ export class CollectionService {
   ): Promise<ResponseCollectionDto> {
     let collection = new ResponseCollectionDto();
 
-    collection.title = '';
+    collection.title = await this.fetchTitle(themeId);
     collection.toyList = await this.fetchToys(
       themeId,
       this.translateOrder(sort)
@@ -72,5 +74,22 @@ export class CollectionService {
       return 'DESC';
     }
     return 'ASC';
+  }
+
+  private async fetchTitle(themeId: number): Promise<string> {
+    try {
+      const title = await this.themeRepository.findOne({
+        where: { id: themeId },
+      });
+
+      console.log(title);
+      const titleStr = new ToyCollection().toTitleString(title);
+
+      return titleStr;
+    } catch (err) {
+      logger.error(err);
+
+      return '';
+    }
   }
 }
