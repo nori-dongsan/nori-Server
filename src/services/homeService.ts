@@ -28,7 +28,7 @@ export class HomeService {
     try {
       const toys = await this.homeRepository.findByIds(ids, {
         relations: ['toySite'],
-        select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
+        select: ['image', 'toySiteCd', 'title', 'price', 'month', 'link'],
       });
 
       // 빈 배열이면 null 반환

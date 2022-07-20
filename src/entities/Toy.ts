@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -81,11 +82,8 @@ export class Toy {
     onDelete: 'CASCADE',
     // nullable: false,
   })
-  toySite: ToySite;
-
-  @IsNotEmpty()
-  @Column({ name: 'toy_site_cd' })
-  toySiteCd: number;
+  @JoinColumn({ name: 'toy_site_cd' })
+  toySiteCd: ToySite;
 
   @OneToMany(() => LikeToy, (likeToy) => likeToy.toy, {
     cascade: true,
@@ -105,7 +103,7 @@ export class Toy {
       const toyDto = new ToyDto();
 
       toyDto.image = toy.image;
-      toyDto.siteName = toy.toySite.toySite;
+      toyDto.siteName = toy.toySiteCd.toySite;
       toyDto.title = toy.title;
       toyDto.price = toy.price;
       toyDto.month = toy.month;
