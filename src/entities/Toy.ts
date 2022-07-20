@@ -82,8 +82,14 @@ export class Toy {
     onDelete: 'CASCADE',
     // nullable: false,
   })
-  @JoinColumn({ name: 'toy_site_cd' })
-  toySiteCd: ToySite;
+  toySite: ToySite;
+
+  @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
+    onDelete: 'CASCADE',
+  })
+  @IsNotEmpty()
+  @Column({ name: 'toy_site_cd' })
+  toySiteCd: number;
 
   @OneToMany(() => LikeToy, (likeToy) => likeToy.toy, {
     cascade: true,
@@ -96,7 +102,7 @@ export class Toy {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  public toDto(toyEntity: Toy[]): ToyDto[] {
+  public toDto(toyEntity: any): ToyDto[] {
     const toys: ToyDto[] = [];
 
     for (const toy of toyEntity) {
