@@ -3,6 +3,8 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ResponseCollectionDto } from '../dtos/CollectionDto';
 import { ToyDto } from '../dtos/ToyDto';
 import { Toy } from '../entities/Toy';
+import { ToyCollection } from '../entities/ToyCollection';
+import { ToySite } from '../entities/ToySite';
 import { CollectionRepository } from '../repositories/CollectionRepository';
 import { logger } from '../utils/Logger';
 
@@ -32,15 +34,35 @@ export class CollectionService {
     order: 'ASC' | 'DESC'
   ): Promise<ToyDto[] | null> {
     try {
-      const toys = await this.collectionRepository.find({
-        relations: ['toySite', 'toyCollection'],
-        select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
-        where: { toyCollection: { id: themeId } },
-        order: { price: order },
-      });
+      // const toys = await this.collectionRepository.find({
+      //   relations: ['toySite', 'toyCollection'],
+      //   select: ['image', 'toySite', 'title', 'price', 'month', 'link'],
+      //   where: { toyCollection: { id: themeId } },
+      //   order: { price: order },
+      // });
+
+      const toys = await this.collectionRepository
+        .createQueryBuilder('toy')
+        .leftJoinAndMapOne(
+          'toy.toySiteCd',
+          ToySite,
+          'toySite',
+          'toy.toySiteCd = toySite.id'
+        )
+        .leftJoinAndMapOne(
+          'toy.toyCollectionId',
+          ToyCollection,
+          'toyCollection',
+          'toy.toyCollectionId = toyCollection.id'
+        )
+        .where('toyCollection.id = :themeId', { themeId: themeId })
+        .orderBy('toy.price', order)
+        .getMany();
+
+      console.log(toys);
 
       // 빈 배열이면 null 반환
-      if (toys.length === 0) {
+      if (!toys) {
         return null;
       } else {
         const toysDto = new Toy().toDto(toys);
