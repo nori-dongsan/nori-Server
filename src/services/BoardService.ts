@@ -59,27 +59,30 @@ export class BoardService {
     }
   }
 
-    /**
-     * 게시물 삭제
-     * @param boardId 
-     */
-    public async delete(boardId: number) {
-        try {
-            await this.boardRepository.delete({ id: boardId })
-        } catch (err) {
-            logger.error(err)
-        }
+  /**
+   * 게시물 삭제
+   * @param boardId
+   */
+  public async delete(boardId: number) {
+    try {
+      await this.boardRepository.delete({ id: boardId });
+    } catch (err) {
+      logger.error(err);
     }
+  }
 
-    /**
-     * 게시물 수정
-     * @param boardPutDto 
-     */
-    public async put(boardPutDto: BoardPutDto) {
-        try {
-            await this.boardRepository.update(boardPutDto.boardId, { content: boardPutDto.content, title: boardPutDto.title })
-        } catch (err) {
-            logger.error(err)
-        }
+  /**
+   * 게시물 수정
+   * @param boardPutDto
+   */
+  public async put(boardPutDto: BoardPutDto) {
+    try {
+      await this.boardRepository.update(boardPutDto.boardId, {
+        content: boardPutDto.content,
+        title: boardPutDto.title,
+      });
+    } catch (err) {
+      logger.error(err);
     }
+  }
 }
