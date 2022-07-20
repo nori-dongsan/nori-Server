@@ -83,6 +83,9 @@ export class Toy {
   })
   toySite: ToySite;
 
+  @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
+    onDelete: 'CASCADE',
+  })
   @IsNotEmpty()
   @Column({ name: 'toy_site_cd' })
   toySiteCd: number;
@@ -98,14 +101,14 @@ export class Toy {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  public toDto(toyEntity: Toy[]): ToyDto[] {
+  public toDto(toyEntity: any): ToyDto[] {
     const toys: ToyDto[] = [];
 
     for (const toy of toyEntity) {
       const toyDto = new ToyDto();
 
       toyDto.image = toy.image;
-      toyDto.siteName = toy.toySite.toySite;
+      toyDto.siteName = toy.toySiteCd.toySite;
       toyDto.title = toy.title;
       toyDto.price = toy.price;
       toyDto.month = toy.month;
