@@ -20,7 +20,7 @@ export class ToySite {
   @Column({ name: 'toy_site', length: 20 })
   toySite: string;
 
-  @OneToMany(() => Toy, (toy) => toy.toySite, {
+  @OneToMany(() => Toy, (toy) => toy.toySiteCd, {
     onDelete: 'CASCADE',
     nullable: false,
   })

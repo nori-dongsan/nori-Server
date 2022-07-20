@@ -3,7 +3,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ResponseHomeDto, ThemeDto } from '../dtos/HomeDto';
 import { ToyDto } from '../dtos/ToyDto';
 import { Toy } from '../entities/Toy';
-import { ToyCollection } from '../entities/ToyCollection';
+import { ToySite } from '../entities/ToySite';
 import { HomeRepository } from '../repositories/HomeRepository';
 import { ThemeRepository } from '../repositories/ThemeRepository';
 import { logger } from '../utils/Logger';
@@ -31,18 +31,21 @@ export class HomeService {
   // id값에 따라 장난감 리스트 반환
   private async fetchToys(ids: any[]): Promise<ToyDto[] | null> {
     try {
-      const toys = await this.homeRepository.findByIds(ids, {
-        select: ['image', 'toySiteCd', 'title', 'price', 'month', 'link'],
-        join: {
-          alias: 'toy',
-          leftJoinAndSelect: {
-            ToySite: 'toy.toySiteCd',
-          },
-        },
-      });
+      const toys = await this.homeRepository
+        .createQueryBuilder('toy')
+        .leftJoinAndMapOne(
+          'toy.toySiteCd',
+          ToySite,
+          'toySite',
+          'toy.toySiteCd = toySite.id'
+        )
+        .whereInIds(ids)
+        .getMany();
+
+      console.log(toys);
 
       // 빈 배열이면 null 반환
-      if (toys.length === 0) {
+      if (!toys) {
         return null;
       } else {
         const toysDto = new Toy().toDto(toys);
