@@ -18,7 +18,7 @@ export class HomeService {
   public async fetchList(): Promise<ResponseHomeDto> {
     let homeToys = new ResponseHomeDto();
 
-    homeToys.trending = await this.fetchToys([1193, 1269, 1028, 1194]);
+    homeToys.trending = await this.fetchToys([1193, 1269, 1028]);
     homeToys.theme = await this.fetchThemes();
     homeToys.noriPick = await this.fetchToys([1233, 1431, 1339, 1276]);
     homeToys.senses = await this.fetchToys([1081, 1356, 1311, 1308]);
