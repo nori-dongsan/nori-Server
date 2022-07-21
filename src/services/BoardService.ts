@@ -13,13 +13,18 @@ export class BoardService {
   /**
    * 게시판 목록 조회
    */
-  public async getList(page: number): Promise<Board[]> {
-    return await this.boardRepository.find({
+  public async getList(page: number): Promise<BoardDto[]> {
+    const boards = await this.boardRepository.find({
       skip: page - 1,
       take: 10,
-      select: ['id', 'title', 'content'],
       relations: ['user'],
     });
+
+    console.log(boards);
+
+    const boardsDto = new Board().toDto(boards);
+
+    return boardsDto;
   }
   /**
    * 게시물 조회

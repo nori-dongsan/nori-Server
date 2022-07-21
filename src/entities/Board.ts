@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { AnyNsRecord } from 'dns';
 import {
   Column,
   CreateDateColumn,
@@ -59,5 +60,25 @@ export class Board {
     board.title = boardCreateDto.title;
     board.content = boardCreateDto.content;
     board.user = boardCreateDto.user;
+  }
+
+  public toDto(boardEntity: any): BoardDto[] {
+    const boards: BoardDto[] = [];
+
+    for (const board of boardEntity) {
+      const boardDto = new BoardDto();
+
+      boardDto.category = board.section;
+      boardDto.title = board.title;
+      boardDto.content = board.content;
+      boardDto.userNickname = board.user.nickname;
+      boardDto.replyCount = 0;
+      boardDto.createdAt = board.createdAt;
+      boardDto.image = '';
+
+      boards.push(boardDto);
+    }
+
+    return boards;
   }
 }

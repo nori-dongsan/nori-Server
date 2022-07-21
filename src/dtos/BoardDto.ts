@@ -54,7 +54,7 @@ export class BoardDto {
   title: string;
   userNickname: string;
   createdAt: Date;
-  imageList: string[];
+  image: string;
   content: string;
   replyCount: number = 0;
   likeCount: number = 0;
@@ -62,9 +62,9 @@ export class BoardDto {
 }
 
 export class BoardPutDto {
-  boardId: number
-  content?: string
-  title?: string
+  boardId: number;
+  content?: string;
+  title?: string;
 }
 
 export class BoardCreateDto {
