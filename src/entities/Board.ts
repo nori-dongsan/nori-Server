@@ -74,9 +74,8 @@ export class Board {
       boardDto.userNickname = board.user.nickname;
       boardDto.replyCount = board.boardComments.length;
       boardDto.createdAt = board.createdAt;
-      boardDto.image = board.boardImages.IsNotEmpty
-        ? board.boardImages[0].imageList
-        : '';
+      boardDto.image =
+        board.boardImages.length != 0 ? board.boardImages[0].imageLink : null;
 
       boards.push(boardDto);
     }

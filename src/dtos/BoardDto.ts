@@ -54,7 +54,7 @@ export class BoardDto {
   title: string;
   userNickname: string;
   createdAt: Date;
-  image: string;
+  image: string | null;
   content: string;
   replyCount: number = 0;
   likeCount: number = 0;
