@@ -13,6 +13,7 @@ export class ToyService {
 
   /**
    * 검색과 필터에 따른 장난감 리스트를 반환한다.
+   * @param categoryId
    * @param searchAndFilterDto
    */
   public async searchAndFilter(
@@ -55,8 +56,10 @@ export class ToyService {
       const searchAndFilterSplitData: {
         [key: string]: string | string[] | undefined;
       } = {};
+      let toyCategoryList;
       let result: Toy[] = [];
 
+      let typeList: string[] = [];
       let monthList: number[] = [];
       let priceList: number[] = [];
       let playHowList: number[] = [];
@@ -69,30 +72,54 @@ export class ToyService {
             searchAndFilterDto[key as keyof SearchAndFilterDto];
           continue;
         }
+        if (key === 'type') {
+          searchAndFilterSplitData[key] =
+            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(',');
+          continue;
+        }
         searchAndFilterSplitData[key] =
           searchAndFilterDto[key as keyof SearchAndFilterDto]?.split('');
       }
 
-      const toyCategoryList = await this.toyRepository
-        .createQueryBuilder('toy')
-        .leftJoinAndMapOne(
-          'toy.toySite',
-          ToySite,
-          'toySite',
-          'toy.toySiteCd = toySite.id'
-        )
-        .where('category_cd IN (:category)', { category: categorySplitData })
-        .getMany();
+      console.log(searchAndFilterSplitData);
+
+      if (searchAndFilterSplitData['search']) {
+        toyCategoryList = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .where('category_cd IN (:category)', { category: categorySplitData })
+          .andWhere('title LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .getMany();
+      } else {
+        toyCategoryList = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .where('category_cd IN (:category)', { category: categorySplitData })
+          .getMany();
+      }
 
       toyCategoryList.forEach((toyData) => {
         const minMonth = toyData.minMonth;
         const maxMonth = toyData.maxMonth;
 
-        console.log(toyData);
-
         for (let month = minMonth; month <= maxMonth; month++) {
           if (!monthList.includes(month)) monthList.push(month);
         }
+
+        if (!typeList.includes(toyData.category))
+          typeList.push(toyData.category);
 
         if (!priceList.includes(toyData.priceCd))
           priceList.push(toyData.priceCd);
@@ -104,11 +131,11 @@ export class ToyService {
           storeList.push(toyData.toySite.toySite);
       });
 
+      filterData.type = typeList;
       filterData.month = monthList.sort();
       filterData.price = priceList.sort();
       filterData.playHow = playHowList.sort();
       filterData.store = storeList;
-      console.log(filterData);
 
       if (Object.keys(searchAndFilterSplitData).length === 0) {
         result = toyCategoryList;
@@ -116,15 +143,14 @@ export class ToyService {
         return { filterData, result };
       }
 
+      console.log(searchAndFilterSplitData);
+
       toyCategoryList.map((toy) => {
         let isOkay = false;
         for (const key in searchAndFilterSplitData) {
-          if (key === 'search') continue;
-
-          if (key === 'categoryCd') {
-            if (
-              searchAndFilterSplitData[key]?.includes(String(toy.categoryCd))
-            ) {
+          if (key === 'type') {
+            if (searchAndFilterSplitData[key]?.includes(String(toy.category))) {
+              console.log(toy);
               isOkay = true;
             } else {
               isOkay = false;
@@ -133,9 +159,7 @@ export class ToyService {
             if (isOkay === false) {
               return;
             }
-          }
-
-          if (key === 'month') {
+          } else if (key === 'month') {
             const minMonth = toy.minMonth;
             const maxMonth = toy.maxMonth;
             const monthList = [];
@@ -156,9 +180,7 @@ export class ToyService {
             if (isOkay === false) {
               return;
             }
-          }
-
-          if (key === 'priceCd') {
+          } else if (key === 'priceCd') {
             if (searchAndFilterSplitData[key]?.includes(String(toy.priceCd))) {
               isOkay = true;
             } else {
@@ -168,9 +190,7 @@ export class ToyService {
             if (isOkay === false) {
               return;
             }
-          }
-
-          if (key === 'playHowCd') {
+          } else if (key === 'playHowCd') {
             console.log(toy);
             if (
               searchAndFilterSplitData[key]?.includes(String(toy.playHowCd))
@@ -183,9 +203,7 @@ export class ToyService {
             if (isOkay === false) {
               return;
             }
-          }
-
-          if (key === 'store') {
+          } else if (key === 'toySiteCd') {
             if (
               searchAndFilterSplitData[key]?.includes(String(toy.toySiteCd))
             ) {
@@ -197,6 +215,195 @@ export class ToyService {
             if (isOkay === false) {
               return;
             }
+          } else {
+            isOkay = true;
+          }
+        }
+        if (isOkay === true) {
+          result.push(toy);
+        }
+      });
+
+      return { filterData, result };
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
+  /**
+   * 검색과 필터에 따른 장난감 리스트를 반환한다. (카테고리 선택 x)
+   * @param searchAndFilterDto
+   */
+  public async searchAndFilterNonCategory(
+    searchAndFilterDto: SearchAndFilterDto
+  ) {
+    try {
+      const filterData: {
+        [key: string]: number[] | string[];
+      } = {};
+
+      const searchAndFilterSplitData: {
+        [key: string]: string | string[] | undefined;
+      } = {};
+      let toyCategoryList;
+      let result: Toy[] = [];
+
+      let typeList: string[] = [];
+      let monthList: number[] = [];
+      let priceList: number[] = [];
+      let playHowList: number[] = [];
+      let storeList: string[] = [];
+
+      // 입력받은 검색 & 필터 조건을 리스트 형태로 split
+      for (const key in searchAndFilterDto) {
+        if (key === 'search') {
+          searchAndFilterSplitData[key] =
+            searchAndFilterDto[key as keyof SearchAndFilterDto];
+          continue;
+        }
+        if (key === 'type') {
+          searchAndFilterSplitData[key] =
+            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(',');
+          continue;
+        }
+        searchAndFilterSplitData[key] =
+          searchAndFilterDto[key as keyof SearchAndFilterDto]?.split('');
+      }
+
+      console.log(searchAndFilterSplitData);
+
+      if (searchAndFilterSplitData['search']) {
+        toyCategoryList = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .andWhere('title LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .getMany();
+      } else {
+        toyCategoryList = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .getMany();
+      }
+
+      toyCategoryList.forEach((toyData) => {
+        const minMonth = toyData.minMonth;
+        const maxMonth = toyData.maxMonth;
+
+        for (let month = minMonth; month <= maxMonth; month++) {
+          if (!monthList.includes(month)) monthList.push(month);
+        }
+
+        if (!typeList.includes(toyData.category))
+          typeList.push(toyData.category);
+
+        if (!priceList.includes(toyData.priceCd))
+          priceList.push(toyData.priceCd);
+
+        if (!playHowList.includes(toyData.playHowCd))
+          playHowList.push(toyData.playHowCd);
+
+        if (!storeList.includes(toyData.toySite.toySite))
+          storeList.push(toyData.toySite.toySite);
+      });
+
+      filterData.type = typeList;
+      filterData.month = monthList.sort();
+      filterData.price = priceList.sort();
+      filterData.playHow = playHowList.sort();
+      filterData.store = storeList;
+
+      if (Object.keys(searchAndFilterSplitData).length === 0) {
+        result = toyCategoryList;
+
+        return { filterData, result };
+      }
+
+      console.log(searchAndFilterSplitData);
+
+      toyCategoryList.map((toy) => {
+        let isOkay = false;
+        for (const key in searchAndFilterSplitData) {
+          if (key === 'type') {
+            if (searchAndFilterSplitData[key]?.includes(String(toy.category))) {
+              console.log(toy);
+              isOkay = true;
+            } else {
+              isOkay = false;
+            }
+
+            if (isOkay === false) {
+              return;
+            }
+          } else if (key === 'month') {
+            const minMonth = toy.minMonth;
+            const maxMonth = toy.maxMonth;
+            const monthList = [];
+            for (let month = minMonth; month <= maxMonth; month++) {
+              monthList.push(String(month));
+            }
+
+            const month = monthList.filter((month) =>
+              searchAndFilterSplitData[key]?.includes(month)
+            );
+
+            if (month.length > 0) {
+              isOkay = true;
+            } else {
+              isOkay = false;
+            }
+
+            if (isOkay === false) {
+              return;
+            }
+          } else if (key === 'priceCd') {
+            if (searchAndFilterSplitData[key]?.includes(String(toy.priceCd))) {
+              isOkay = true;
+            } else {
+              isOkay = false;
+            }
+
+            if (isOkay === false) {
+              return;
+            }
+          } else if (key === 'playHowCd') {
+            console.log(toy);
+            if (
+              searchAndFilterSplitData[key]?.includes(String(toy.playHowCd))
+            ) {
+              isOkay = true;
+            } else {
+              isOkay = false;
+            }
+
+            if (isOkay === false) {
+              return;
+            }
+          } else if (key === 'toySiteCd') {
+            if (
+              searchAndFilterSplitData[key]?.includes(String(toy.toySiteCd))
+            ) {
+              isOkay = true;
+            } else {
+              isOkay = false;
+            }
+
+            if (isOkay === false) {
+              return;
+            }
+          } else {
+            isOkay = true;
           }
         }
         if (isOkay === true) {
