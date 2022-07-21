@@ -100,7 +100,7 @@ export class ToyService {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
           .limit(40)
-          .offset(offSet)
+          .offset(offSet * 40)
           .getMany();
       } else {
         toyCategoryListPage = await this.toyRepository
@@ -113,7 +113,7 @@ export class ToyService {
           )
           .where('category_cd IN (:category)', { category: categorySplitData })
           .limit(40)
-          .offset(offSet)
+          .offset(offSet * 40)
           .getMany();
       }
 
@@ -323,7 +323,7 @@ export class ToyService {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
           .limit(40)
-          .offset(offSet)
+          .offset(offSet * 40)
           .getMany();
       } else {
         toyCategoryListPage = await this.toyRepository
@@ -335,7 +335,7 @@ export class ToyService {
             'toy.toySiteCd = toySite.id'
           )
           .limit(40)
-          .offset(offSet)
+          .offset(offSet * 40)
           .getMany();
       }
 
