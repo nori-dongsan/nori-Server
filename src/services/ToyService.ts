@@ -96,6 +96,9 @@ export class ToyService {
           .andWhere('title LIKE :search', {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
+          .orWhere('toySite.toySite LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
           .getMany();
       } else {
         toyCategoryList = await this.toyRepository
@@ -279,6 +282,9 @@ export class ToyService {
           'toy.toySiteCd = toySite.id'
         )
         .where('title LIKE :search', {
+          search: `%${searchAndFilterSplitData['search']}%`,
+        })
+        .orWhere('toySite.toySite LIKE :search', {
           search: `%${searchAndFilterSplitData['search']}%`,
         })
         .getMany();
