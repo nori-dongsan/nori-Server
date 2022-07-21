@@ -17,7 +17,7 @@ export class BoardService {
     const boards = await this.boardRepository.find({
       skip: page - 1,
       take: 10,
-      relations: ['user'],
+      relations: ['user', 'boardComments', 'boardImages'],
     });
 
     console.log(boards);
