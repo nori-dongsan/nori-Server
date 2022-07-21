@@ -29,6 +29,7 @@ import { User } from '../entities/User';
 import { BoardImageService } from '../services/BoardImageService';
 import { BoardImageCreateDto } from '../dtos/BoardImageDto';
 import { logger } from '../utils/Logger';
+import { send } from '../modules/slack';
 
 @JsonController('/board')
 export class BoardController {
@@ -37,7 +38,7 @@ export class BoardController {
     private boardCommentService: BoardCommentService,
     private userService: UserService,
     private boardImageService: BoardImageService
-  ) {}
+  ) { }
 
   @HttpCode(200)
   @Get('')
@@ -50,13 +51,18 @@ export class BoardController {
     @Res() res: Response,
     @QueryParam('page') page: number
   ): Promise<Response> {
-    const boards = await this.boardService.getList(page);
-
-    return res
-      .status(statusCode.CREATED)
-      .send(
-        util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards)
-      );
+    try {
+      const boards = await this.boardService.getList(page);
+      return res
+        .status(statusCode.CREATED)
+        .send(
+          util.success(statusCode.OK, message.READ_BAORD_LIST_SUCCESS, boards)
+        );
+    } catch (err) {
+      logger.error(err)
+      await send(err as Error["message"])
+      return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, message.INTERNAL_SERVER_ERROR))
+    }
   }
   @UseBefore(verifyAccessToken)
   @HttpCode(201)
@@ -78,22 +84,22 @@ export class BoardController {
       const board = await this.boardService.create(boardCreateDto);
       // TODO: 이미지 없을 시 분기처리
 
-      /**
-      files.map(async (file) => {
-        const keyName = `${Date.now()}_${file.originalname}`;
-        const params = {
-          Key: keyName,
-          Bucket: 'nori-community',
-          Body: file.buffer,
-          ACL: 'public-read',
-        };
-        await s3.upload(params).promise();
-        const boardImageCreateDto = new BoardImageCreateDto();
-        boardImageCreateDto.board = board!;
-        boardImageCreateDto.imageLink = keyName;
-        await this.boardImageService.create(boardImageCreateDto);
-      });
-      **/
+      if (files) {
+        await Promise.all(files.map(async (file) => {
+          const keyName = `${Date.now()}_${file.originalname}`;
+          const params = {
+            Key: keyName,
+            Bucket: 'nori-community',
+            Body: file.buffer,
+            ACL: 'public-read',
+          };
+          await s3.upload(params).promise();
+          const boardImageCreateDto = new BoardImageCreateDto();
+          boardImageCreateDto.board = board!;
+          boardImageCreateDto.imageLink = keyName;
+          await this.boardImageService.create(boardImageCreateDto);
+        }));
+      }
       const result = {
         boardId: board?.id,
       };
@@ -102,6 +108,7 @@ export class BoardController {
       );
     } catch (err) {
       logger.error(err);
+      await send(err as Error["message"])
       return res
         .status(statusCode.INTERNAL_SERVER_ERROR)
         .send(

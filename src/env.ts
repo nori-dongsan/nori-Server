@@ -34,5 +34,8 @@ export const env = {
     accessKey: process.env.AWS_ACCESS_KEY,
     secretKey: process.env.AWS_SECRET_KEY,
     bucketName: process.env.BUCKET_NAME
+  },
+  slack: {
+    webhookUrl: process.env.SLACK_WEBHOOK
   }
 };
