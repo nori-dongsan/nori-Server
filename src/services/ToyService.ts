@@ -273,21 +273,33 @@ export class ToyService {
           searchAndFilterDto[key as keyof SearchAndFilterDto]?.split('');
       }
 
-      toyCategoryList = await this.toyRepository
-        .createQueryBuilder('toy')
-        .leftJoinAndMapOne(
-          'toy.toySite',
-          ToySite,
-          'toySite',
-          'toy.toySiteCd = toySite.id'
-        )
-        .where('title LIKE :search', {
-          search: `%${searchAndFilterSplitData['search']}%`,
-        })
-        .orWhere('toySite.toySite LIKE :search', {
-          search: `%${searchAndFilterSplitData['search']}%`,
-        })
-        .getMany();
+      if (searchAndFilterSplitData['search']) {
+        toyCategoryList = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .where('title LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .orWhere('toySite.toySite LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .getMany();
+      } else {
+        toyCategoryList = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .getMany();
+      }
 
       toyCategoryList.forEach((toyData) => {
         const minMonth = toyData.minMonth;
