@@ -270,7 +270,7 @@ export class ToyService {
    * @param searchAndFilterDto
    */
   public async searchAndFilterNonCategory(
-    offSet: number,
+    // offSet: number,
     searchAndFilterDto: SearchAndFilterDto
   ) {
     try {
@@ -322,8 +322,8 @@ export class ToyService {
           .orWhere('toySite.toySite LIKE :search', {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
-          .limit(40)
-          .offset(offSet * 40)
+          //.limit(40)
+          //.offset(offSet * 40)
           .getMany();
       } else {
         toyCategoryListPage = await this.toyRepository
@@ -334,8 +334,8 @@ export class ToyService {
             'toySite',
             'toy.toySiteCd = toySite.id'
           )
-          .limit(40)
-          .offset(offSet * 40)
+          //.limit(40)
+          //.offset(offSet * 40)
           .getMany();
       }
 
@@ -393,8 +393,6 @@ export class ToyService {
       filterData.price = priceList.sort();
       filterData.playHow = playHowList.sort();
       filterData.store = storeList;
-
-      console.log(searchAndFilterSplitData);
 
       if (Object.keys(searchAndFilterSplitData).length === 0) {
         result = toyCategoryList;
