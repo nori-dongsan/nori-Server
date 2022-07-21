@@ -270,32 +270,18 @@ export class ToyService {
           searchAndFilterDto[key as keyof SearchAndFilterDto]?.split('');
       }
 
-      console.log(searchAndFilterSplitData);
-
-      if (searchAndFilterSplitData['search']) {
-        toyCategoryList = await this.toyRepository
-          .createQueryBuilder('toy')
-          .leftJoinAndMapOne(
-            'toy.toySite',
-            ToySite,
-            'toySite',
-            'toy.toySiteCd = toySite.id'
-          )
-          .andWhere('title LIKE :search', {
-            search: `%${searchAndFilterSplitData['search']}%`,
-          })
-          .getMany();
-      } else {
-        toyCategoryList = await this.toyRepository
-          .createQueryBuilder('toy')
-          .leftJoinAndMapOne(
-            'toy.toySite',
-            ToySite,
-            'toySite',
-            'toy.toySiteCd = toySite.id'
-          )
-          .getMany();
-      }
+      toyCategoryList = await this.toyRepository
+        .createQueryBuilder('toy')
+        .leftJoinAndMapOne(
+          'toy.toySite',
+          ToySite,
+          'toySite',
+          'toy.toySiteCd = toySite.id'
+        )
+        .where('title LIKE :search', {
+          search: `%${searchAndFilterSplitData['search']}%`,
+        })
+        .getMany();
 
       toyCategoryList.forEach((toyData) => {
         const minMonth = toyData.minMonth;
@@ -324,13 +310,13 @@ export class ToyService {
       filterData.playHow = playHowList.sort();
       filterData.store = storeList;
 
+      console.log(searchAndFilterSplitData);
+
       if (Object.keys(searchAndFilterSplitData).length === 0) {
         result = toyCategoryList;
 
         return { filterData, result };
       }
-
-      console.log(searchAndFilterSplitData);
 
       toyCategoryList.map((toy) => {
         let isOkay = false;
