@@ -68,6 +68,7 @@ export class Board {
     for (const board of boardEntity) {
       const boardDto = new BoardDto();
 
+      boardDto.id = board.id;
       boardDto.category = board.section;
       boardDto.title = board.title;
       boardDto.content = board.content;

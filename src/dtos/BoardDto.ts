@@ -49,6 +49,7 @@ export class BoardResponseDto {
 }
 
 export class BoardDto {
+  id: number;
   author: boolean;
   category: string;
   title: string;
