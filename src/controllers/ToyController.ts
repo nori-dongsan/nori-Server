@@ -1,4 +1,11 @@
-import { Get, HttpCode, JsonController, Req, Res } from 'routing-controllers';
+import {
+  Get,
+  HttpCode,
+  JsonController,
+  QueryParam,
+  Req,
+  Res,
+} from 'routing-controllers';
 import { Request, Response } from 'express';
 import { OpenAPI } from 'routing-controllers-openapi';
 import statusCode from '../modules/statusCode';
@@ -20,14 +27,18 @@ export class ToyController {
     statusCode: '200',
   })
   public async searchAndFilter(
-    @Req() req: Request,
+    @QueryParam('page') page: number,
+    @Req()
+    req: Request,
     @Res() res: Response
   ): Promise<Response> {
     const { categoryId } = req.params;
+    const offSet = page;
     const searchAndFilterDto: SearchAndFilterDto = req.query;
 
     try {
       const searchAndFilterList = await this.toyService.searchAndFilter(
+        offSet,
         categoryId,
         searchAndFilterDto
       );
@@ -64,14 +75,19 @@ export class ToyController {
     statusCode: '200',
   })
   public async searchAndFilterNonCategory(
+    @QueryParam('page') page: number,
     @Req() req: Request,
     @Res() res: Response
   ): Promise<Response> {
+    const offSet = page;
     const searchAndFilterDto: SearchAndFilterDto = req.query;
 
     try {
       const searchAndFilterList =
-        await this.toyService.searchAndFilterNonCategory(searchAndFilterDto);
+        await this.toyService.searchAndFilterNonCategory(
+          offSet,
+          searchAndFilterDto
+        );
 
       return res
         .status(statusCode.OK)

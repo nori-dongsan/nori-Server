@@ -17,6 +17,7 @@ export class ToyService {
    * @param searchAndFilterDto
    */
   public async searchAndFilter(
+    offSet: number,
     categoryId: string,
     searchAndFilterDto: SearchAndFilterDto
   ) {
@@ -56,6 +57,7 @@ export class ToyService {
       const searchAndFilterSplitData: {
         [key: string]: string | string[] | undefined;
       } = {};
+      let toyCategoryListPage;
       let toyCategoryList;
       let result: Toy[] = [];
 
@@ -81,7 +83,39 @@ export class ToyService {
           searchAndFilterDto[key as keyof SearchAndFilterDto]?.split('');
       }
 
-      console.log(searchAndFilterSplitData);
+      if (searchAndFilterSplitData['search']) {
+        toyCategoryListPage = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .where('category_cd IN (:category)', { category: categorySplitData })
+          .andWhere('title LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .orWhere('toySite.toySite LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .limit(40)
+          .offset(offSet)
+          .getMany();
+      } else {
+        toyCategoryListPage = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .where('category_cd IN (:category)', { category: categorySplitData })
+          .limit(40)
+          .offset(offSet)
+          .getMany();
+      }
 
       if (searchAndFilterSplitData['search']) {
         toyCategoryList = await this.toyRepository
@@ -146,9 +180,7 @@ export class ToyService {
         return { filterData, result };
       }
 
-      console.log(searchAndFilterSplitData);
-
-      toyCategoryList.map((toy) => {
+      toyCategoryListPage.map((toy) => {
         let isOkay = false;
         for (const key in searchAndFilterSplitData) {
           if (key === 'type') {
@@ -238,6 +270,7 @@ export class ToyService {
    * @param searchAndFilterDto
    */
   public async searchAndFilterNonCategory(
+    offSet: number,
     searchAndFilterDto: SearchAndFilterDto
   ) {
     try {
@@ -249,6 +282,7 @@ export class ToyService {
         [key: string]: string | string[] | undefined;
       } = {};
       let toyCategoryList;
+      let toyCategoryListPage;
       let result: Toy[] = [];
 
       let typeList: string[] = [];
@@ -271,6 +305,38 @@ export class ToyService {
         }
         searchAndFilterSplitData[key] =
           searchAndFilterDto[key as keyof SearchAndFilterDto]?.split('');
+      }
+
+      if (searchAndFilterSplitData['search']) {
+        toyCategoryListPage = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .where('title LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .orWhere('toySite.toySite LIKE :search', {
+            search: `%${searchAndFilterSplitData['search']}%`,
+          })
+          .limit(40)
+          .offset(offSet)
+          .getMany();
+      } else {
+        toyCategoryListPage = await this.toyRepository
+          .createQueryBuilder('toy')
+          .leftJoinAndMapOne(
+            'toy.toySite',
+            ToySite,
+            'toySite',
+            'toy.toySiteCd = toySite.id'
+          )
+          .limit(40)
+          .offset(offSet)
+          .getMany();
       }
 
       if (searchAndFilterSplitData['search']) {
@@ -336,7 +402,7 @@ export class ToyService {
         return { filterData, result };
       }
 
-      toyCategoryList.map((toy) => {
+      toyCategoryListPage.map((toy) => {
         let isOkay = false;
         for (const key in searchAndFilterSplitData) {
           if (key === 'type') {
