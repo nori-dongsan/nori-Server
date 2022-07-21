@@ -20,9 +20,7 @@ export class BoardService {
       relations: ['user', 'boardComments', 'boardImages'],
     });
 
-    //TODO: 지금은 replyCount를 db 데이터 다 받아온 후에 우리 로직에서 배열.length하는 방법으로 하고 있는데, query에서 count() 쓰는 코드로 변경 필요 -> query builder 써야 해서 임시로 이렇게 작성 해놓음
-
-    console.log(boards);
+    //TODO: 지금은 replyCount를 db 데이터 다 받아온 후에 우리 로직에서 (배열).length하는 방법으로 하고 있는데, query에서 count() 쓰는 코드로 변경 필요 -> query builder 써야 해서 임시로 이렇게 작성 해놓음
 
     const boardsDto = new Board().toDto(boards);
 
