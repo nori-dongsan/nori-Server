@@ -69,7 +69,7 @@ export class BoardPutDto {
 }
 
 export class BoardCreateDto {
-  category: string;
+  section: string;
   title: string;
   content: string;
   user: User;
