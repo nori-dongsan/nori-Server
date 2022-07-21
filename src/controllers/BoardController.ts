@@ -37,7 +37,7 @@ export class BoardController {
     private boardCommentService: BoardCommentService,
     private userService: UserService,
     private boardImageService: BoardImageService
-  ) {}
+  ) { }
 
   @HttpCode(200)
   @Get('')
@@ -78,22 +78,22 @@ export class BoardController {
       const board = await this.boardService.create(boardCreateDto);
       // TODO: 이미지 없을 시 분기처리
 
-      /**
-      files.map(async (file) => {
-        const keyName = `${Date.now()}_${file.originalname}`;
-        const params = {
-          Key: keyName,
-          Bucket: 'nori-community',
-          Body: file.buffer,
-          ACL: 'public-read',
-        };
-        await s3.upload(params).promise();
-        const boardImageCreateDto = new BoardImageCreateDto();
-        boardImageCreateDto.board = board!;
-        boardImageCreateDto.imageLink = keyName;
-        await this.boardImageService.create(boardImageCreateDto);
-      });
-      **/
+      if (files) {
+        files.map(async (file) => {
+          const keyName = `${Date.now()}_${file.originalname}`;
+          const params = {
+            Key: keyName,
+            Bucket: 'nori-community',
+            Body: file.buffer,
+            ACL: 'public-read',
+          };
+          await s3.upload(params).promise();
+          const boardImageCreateDto = new BoardImageCreateDto();
+          boardImageCreateDto.board = board!;
+          boardImageCreateDto.imageLink = keyName;
+          await this.boardImageService.create(boardImageCreateDto);
+        });
+      }
       const result = {
         boardId: board?.id,
       };
