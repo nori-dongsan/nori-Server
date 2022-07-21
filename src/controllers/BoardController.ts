@@ -85,7 +85,7 @@ export class BoardController {
       // TODO: 이미지 없을 시 분기처리
 
       if (files) {
-        files.map(async (file) => {
+        await Promise.all(files.map(async (file) => {
           const keyName = `${Date.now()}_${file.originalname}`;
           const params = {
             Key: keyName,
@@ -98,7 +98,7 @@ export class BoardController {
           boardImageCreateDto.board = board!;
           boardImageCreateDto.imageLink = keyName;
           await this.boardImageService.create(boardImageCreateDto);
-        });
+        }));
       }
       const result = {
         boardId: board?.id,
