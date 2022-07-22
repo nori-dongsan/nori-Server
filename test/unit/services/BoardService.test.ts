@@ -27,11 +27,11 @@ describe("BoardService", () => {
     afterAll(() => db.close());
 
     it("전체 게시물 리스트를 조회한다.", async () => {
-        const boards = await boardService.getList(1);
-        const boardDtos = boards.map((value: Board) => {
+        const boards = await boardService.getList();
+        const boardDtos = boards.map((value) => {
             const boardDto = {
                 id: value.id,
-                section: value.section,
+                section: value.category,
                 title: value.title,
                 content: value.content,
             }
@@ -40,7 +40,7 @@ describe("BoardService", () => {
         expect(boardDtos).toEqual([
             {
                 id: 4,
-                section: undefined,
+                section: "",
                 title: 'test',
                 content: 'testtest',
             }
