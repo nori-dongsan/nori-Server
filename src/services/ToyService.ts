@@ -76,7 +76,7 @@ export class ToyService {
         }
         if (key === 'type') {
           searchAndFilterSplitData[key] =
-            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(',');
+            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(' ');
           continue;
         }
         searchAndFilterSplitData[key] =
@@ -300,7 +300,7 @@ export class ToyService {
         }
         if (key === 'type') {
           searchAndFilterSplitData[key] =
-            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(',');
+            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(' ');
           continue;
         }
         searchAndFilterSplitData[key] =
