@@ -1,6 +1,15 @@
 # Nori-Server with Express
 요즘 누가 롯데월드 가나~? 나는 💚nori-dongsan💚 Server로 간다
 
+## 서비스 한 줄 설명
+다양한 장난감 정보를 한눈에! 우리 아이 장난감 대여 비교 플랫폼 nori
+
+<img width="1920" alt="노리핵심기능1" src="https://user-images.githubusercontent.com/51286325/180431000-9feb24da-3151-4808-af73-07afaae704d3.png">
+
+<img width="1920" alt="노리핵심기능2" src="https://user-images.githubusercontent.com/51286325/180431050-51978eb0-dd8a-4041-8668-f1a54bdbad87.png">
+
+<img width="1920" alt="노리핵심기능3" src="https://user-images.githubusercontent.com/51286325/180431090-32590bd2-3fc2-4b4f-845f-c022a11960f2.png">
+
 ## Member
 
 #### [구건모](https://github.com/gunom)
