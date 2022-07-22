@@ -71,6 +71,7 @@ describe("BoardService", () => {
         boardPutDto.boardId = boardId
         boardPutDto.content = 'test2'
         boardPutDto.title = 'title2'
+        boardPutDto.section = 'test'
         await boardService.put(boardPutDto)
         const board = await boardService.get(boardId)
         const boardDto = new BoardDto()
