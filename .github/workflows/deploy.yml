@@ -1,45 +1,11 @@
 name: CI/CD
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develope" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develope" ]
 
 jobs:
-  CI-CD:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-
-    - name: make env.production
-      run: |
-        ls
-        mkdir env
-        cd ./env
-        touch ./.env.production
-        echo "${{secrets.PROPERTIES}}" > ./.env.production
-      shell: bash
-    - name: Docker build & push to prod
-      run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/nori-docker-server .
-          docker push ${{ secrets.DOCKER_REPO }}/nori-docker-server
-    - name: Deploy to prod
-      uses: appleboy/ssh-action@master
-      id: deploy-prod
-      with:
-          host: ${{ secrets.HOST_PROD }}
-          port: ${{secrets.PORT}}
-          username: ${{secrets.USER}}
-          key: ${{ secrets.PRIVATE_KEY }}
-          envs: GITHUB_SHA
-          script: |
-              sudo docker rm -f $(docker ps -qa)
-              sudo docker pull ${{ secrets.DOCKER_REPO }}/nori-docker-server
-              docker image prune -f
   TEST:
     runs-on: ubuntu-latest
     steps:
