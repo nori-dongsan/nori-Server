@@ -48,11 +48,10 @@ export class BoardController {
     statusCode: '200',
   })
   public async getList(
-    @Res() res: Response,
-    @QueryParam('page') page: number
+    @Res() res: Response
   ): Promise<Response> {
     try {
-      const boards = await this.boardService.getList(page);
+      const boards = await this.boardService.getList();
       return res
         .status(statusCode.CREATED)
         .send(
@@ -198,7 +197,7 @@ export class BoardController {
     @Param('boardId') boardId: number,
     @UploadedFiles('imageList') files?: Express.Multer.File[]
   ) {
-    const { title, content } = req.body;
+    const { title, content, category } = req.body;
     try {
       const boardPutDto = new BoardPutDto();
       boardPutDto.boardId = boardId;
@@ -207,6 +206,8 @@ export class BoardController {
       else boardPutDto.title = board!.title;
       if (content) boardPutDto.content = content;
       else boardPutDto.content = board!.content;
+      if (category) boardPutDto.section = category
+      else boardPutDto.section = board!.section
 
       await this.boardService.put(boardPutDto);
       if (files) {

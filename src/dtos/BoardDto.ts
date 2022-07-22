@@ -64,6 +64,7 @@ export class BoardDto {
 
 export class BoardPutDto {
   boardId: number;
+  section?: string;
   content?: string;
   title?: string;
 }

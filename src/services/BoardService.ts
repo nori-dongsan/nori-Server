@@ -13,10 +13,8 @@ export class BoardService {
   /**
    * 게시판 목록 조회
    */
-  public async getList(page: number): Promise<BoardDto[]> {
+  public async getList(): Promise<BoardDto[]> {
     const boards = await this.boardRepository.find({
-      skip: (page - 1) * 10,
-      take: 10,
       relations: ['user', 'boardComments', 'boardImages'],
     });
 
@@ -85,6 +83,7 @@ export class BoardService {
       await this.boardRepository.update(boardPutDto.boardId, {
         content: boardPutDto.content,
         title: boardPutDto.title,
+        section: boardPutDto.section
       });
     } catch (err) {
       logger.error(err);
