@@ -27,13 +27,11 @@ export class ToyController {
     statusCode: '200',
   })
   public async searchAndFilter(
-    @QueryParam('page') page: number,
     @Req()
     req: Request,
     @Res() res: Response
   ): Promise<Response> {
     const { categoryId } = req.params;
-    const offSet = page;
     const searchAndFilterDto: SearchAndFilterDto = req.query;
 
     try {
