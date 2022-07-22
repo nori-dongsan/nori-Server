@@ -8,14 +8,14 @@ import { logger } from '../utils/Logger';
 
 @Service()
 export class BoardService {
-  constructor(@InjectRepository() private boardRepository: BoardRepository) {}
+  constructor(@InjectRepository() private boardRepository: BoardRepository) { }
 
   /**
    * 게시판 목록 조회
    */
   public async getList(page: number): Promise<BoardDto[]> {
     const boards = await this.boardRepository.find({
-      skip: page - 1,
+      skip: (page - 1) * 10,
       take: 10,
       relations: ['user', 'boardComments', 'boardImages'],
     });
