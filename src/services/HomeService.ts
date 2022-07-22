@@ -18,17 +18,17 @@ export class HomeService {
   public async fetchList(): Promise<ResponseHomeDto> {
     let homeToys = new ResponseHomeDto();
 
-    homeToys.trending = await this.fetchToys([3017, 2769, 2881]);
+    homeToys.trending = await this.fetchToys(1001);
     homeToys.theme = await this.fetchThemes();
-    homeToys.noriPick = await this.fetchToys([2733, 2878, 2971, 2776]);
-    homeToys.senses = await this.fetchToys([2767, 2989, 2943, 2941]);
-    homeToys.smart = await this.fetchToys([2889, 2826, 2789, 2804]);
+    homeToys.noriPick = await this.fetchToys(1002);
+    homeToys.senses = await this.fetchToys(1003);
+    homeToys.smart = await this.fetchToys(1004);
 
     return homeToys;
   }
 
   // id값에 따라 장난감 리스트 반환
-  private async fetchToys(ids: any[]): Promise<ToyDto[] | null> {
+  private async fetchToys(id: number): Promise<ToyDto[] | null> {
     try {
       const toys = await this.homeRepository
         .createQueryBuilder('toy')
@@ -38,7 +38,7 @@ export class HomeService {
           'toySite',
           'toy.toySiteCd = toySite.id'
         )
-        .whereInIds(ids)
+        .where('toyCollectionId = :id', { id: id })
         .getMany();
 
       // 빈 배열이면 null 반환
