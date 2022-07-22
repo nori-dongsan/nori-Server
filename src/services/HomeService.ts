@@ -18,11 +18,11 @@ export class HomeService {
   public async fetchList(): Promise<ResponseHomeDto> {
     let homeToys = new ResponseHomeDto();
 
-    homeToys.trending = await this.fetchToys([1193, 1269, 1028]);
+    homeToys.trending = await this.fetchToys([3017, 2769, 2881]);
     homeToys.theme = await this.fetchThemes();
-    homeToys.noriPick = await this.fetchToys([1233, 1431, 1339, 1276]);
-    homeToys.senses = await this.fetchToys([1081, 1356, 1311, 1308]);
-    homeToys.smart = await this.fetchToys([1032, 1191, 1159, 1169]);
+    homeToys.noriPick = await this.fetchToys([2733, 2878, 2971, 2776]);
+    homeToys.senses = await this.fetchToys([2767, 2989, 2943, 2941]);
+    homeToys.smart = await this.fetchToys([2889, 2826, 2789, 2804]);
 
     return homeToys;
   }
