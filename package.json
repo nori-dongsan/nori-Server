@@ -12,7 +12,6 @@
     "dev": "nodemon --watch 'src/**/*' --exec ts-node src/server.ts",
     "start": "ts-node dist/server.js",
     "build": "tsc && node dist/server.js",
-    "postinstall": "npm run build",
     "test": "jest --coverage --verbose",
     "test:clear": "jest --clearCache"
   },
