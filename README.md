@@ -28,6 +28,10 @@
 * [Branch strategy](https://techblog.woowahan.com/2553/)
 * [ERD](https://happy-elephant-0ba.notion.site/ERD-7cdf8bd16e1b4a3bbbcf35b6dce1d28b)
 
+## 서버 아키텍쳐
+![image](https://user-images.githubusercontent.com/51692363/180466136-bc590ab0-c2fb-4bf1-9974-f37d010e5f10.png)
+
+
 ## Project structure
 
 ```markdown
