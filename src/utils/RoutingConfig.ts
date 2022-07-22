@@ -4,8 +4,8 @@ export const routingControllerOptions = {
   cors: {
     credentials: true,
     origin: [
-      'http://localhost:3000',
       `${env.app.ec2Instance}`,
+      'http://localhost:3000',
       'https://www.with-nori.com',
     ],
   },
