@@ -24,35 +24,35 @@ export class ToyService {
       const filterData: {
         [key: string]: number[] | string[];
       } = {};
-      let categorySplitData: string[] = [];
+      let categorySplitData: number[] = [];
 
       if (categoryId === '1') {
-        categorySplitData = ['3', '4', '5'];
+        categorySplitData = [1, 2, 3];
       }
 
       if (categoryId === '2') {
-        categorySplitData = ['10', '11'];
+        categorySplitData = [4, 5, 6, 7, 8];
       }
 
       if (categoryId === '3') {
-        categorySplitData = ['14', '15'];
+        categorySplitData = [9, 10, 11];
       }
 
       if (categoryId === '4') {
-        categorySplitData = ['12', '13'];
+        categorySplitData = [12, 13, 14];
       }
 
       if (categoryId === '5') {
-        categorySplitData = ['6', '7', '8'];
+        categorySplitData = [15, 16, 17];
       }
 
       if (categoryId === '6') {
-        categorySplitData = ['1', '2'];
+        categorySplitData = [18, 19];
       }
 
-      if (categoryId === '7') {
-        categorySplitData = ['9'];
-      }
+      // if (categoryId === '7') {
+      //   categorySplitData = ['9'];
+      // }
       const searchAndFilterSplitData: {
         [key: string]: string | string[] | undefined;
       } = {};
@@ -95,7 +95,9 @@ export class ToyService {
             'toySite',
             'toy.toySiteCd = toySite.id'
           )
-          .where('category_cd IN (:category)', { category: categorySplitData })
+          .where('category_cd IN (:...category)', {
+            category: categorySplitData,
+          })
           .andWhere('title LIKE :search', {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
@@ -112,7 +114,9 @@ export class ToyService {
             'toySite',
             'toy.toySiteCd = toySite.id'
           )
-          .where('category_cd IN (:category)', { category: categorySplitData })
+          .where('category_cd IN (:...category)', {
+            category: categorySplitData,
+          })
           .getMany();
       }
 
@@ -125,7 +129,9 @@ export class ToyService {
             'toySite',
             'toy.toySiteCd = toySite.id'
           )
-          .where('category_cd IN (:category)', { category: categorySplitData })
+          .where('category_cd IN (:...category)', {
+            category: categorySplitData,
+          })
           .andWhere('title LIKE :search', {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
@@ -142,7 +148,9 @@ export class ToyService {
             'toySite',
             'toy.toySiteCd = toySite.id'
           )
-          .where('category_cd IN (:category)', { category: categorySplitData })
+          .where('category_cd IN (:...category)', {
+            category: categorySplitData,
+          })
           .getMany();
       }
 
