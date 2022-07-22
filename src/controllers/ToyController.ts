@@ -27,18 +27,15 @@ export class ToyController {
     statusCode: '200',
   })
   public async searchAndFilter(
-    @QueryParam('page') page: number,
     @Req()
     req: Request,
     @Res() res: Response
   ): Promise<Response> {
     const { categoryId } = req.params;
-    const offSet = page;
     const searchAndFilterDto: SearchAndFilterDto = req.query;
 
     try {
       const searchAndFilterList = await this.toyService.searchAndFilter(
-        offSet,
         categoryId,
         searchAndFilterDto
       );
@@ -75,17 +72,17 @@ export class ToyController {
     statusCode: '200',
   })
   public async searchAndFilterNonCategory(
-    @QueryParam('page') page: number,
+    // @QueryParam('page') page: number,
     @Req() req: Request,
     @Res() res: Response
   ): Promise<Response> {
-    const offSet = page;
+    // const offSet = page;
     const searchAndFilterDto: SearchAndFilterDto = req.query;
 
     try {
       const searchAndFilterList =
         await this.toyService.searchAndFilterNonCategory(
-          offSet,
+          // offSet,
           searchAndFilterDto
         );
 

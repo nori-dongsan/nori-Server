@@ -57,57 +57,41 @@ export class AuthController {
     const createUserDto = new CreateUserDto(snsId, email, provider);
 
     try {
-      const user = await this.authService.validateUserBySnsId(
+      let user = await this.authService.validateUserBySnsId(
         createUserDto.snsId
       );
 
-      // 이미 가입이 된 유저일 때
-      if (user) {
-        let responseUserDto: ResponseUserDto = {
-          accessToken: generateAccessToken(user),
-          refreshToken: generateRefreshToken(user),
-          isSignup: false,
-        };
-        await this.authService.saveRefreshToken(
-          user,
-          responseUserDto.refreshToken
-        );
-
-        // 회원가입을 완료한 유저인지 확인
-        if (user.nickname) {
-          responseUserDto.isSignup = true;
-        }
-
-        return res
-          .status(statusCode.OK)
-          .send(
-            util.success(statusCode.OK, message.LOGIN_SUCCESS, responseUserDto)
-          );
-      } else {
-        // 신규 가입 유저
+      if (!user) {
         const newUser = await this.userService.create(createUserDto);
-        if (!newUser) {
+        if (!newUser)
           return res
             .status(statusCode.DB_ERROR)
             .send(util.fail(statusCode.DB_ERROR, message.CREATE_USER_FAIL));
+
+        user = await this.authService.validateUserBySnsId(createUserDto.snsId);
+        if (!user) {
+          return res
+            .status(statusCode.DB_ERROR)
+            .send(util.fail(statusCode.DB_ERROR, message.NONEXIST_USER));
         }
-
-        const responseUserDto: ResponseUserDto = {
-          accessToken: generateAccessToken(newUser),
-          refreshToken: generateRefreshToken(newUser),
-          isSignup: false,
-        };
-        await this.authService.saveRefreshToken(
-          newUser,
-          responseUserDto.refreshToken
-        );
-
-        return res
-          .status(statusCode.OK)
-          .send(
-            util.success(statusCode.OK, message.LOGIN_SUCCESS, responseUserDto)
-          );
       }
+
+      const responseUserDto: ResponseUserDto = {
+        accessToken: generateAccessToken(user),
+        refreshToken: generateRefreshToken(user),
+        isSignup: user?.nickname ? true : false,
+      };
+
+      await this.authService.saveRefreshToken(
+        user,
+        responseUserDto.refreshToken
+      );
+
+      return res
+        .status(statusCode.OK)
+        .send(
+          util.success(statusCode.OK, message.LOGIN_SUCCESS, responseUserDto)
+        );
     } catch (error) {
       logger.error(error);
       console.log(error);

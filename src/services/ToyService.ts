@@ -17,7 +17,6 @@ export class ToyService {
    * @param searchAndFilterDto
    */
   public async searchAndFilter(
-    offSet: number,
     categoryId: string,
     searchAndFilterDto: SearchAndFilterDto
   ) {
@@ -69,6 +68,10 @@ export class ToyService {
 
       // 입력받은 검색 & 필터 조건을 리스트 형태로 split
       for (const key in searchAndFilterDto) {
+        if (searchAndFilterDto[key as keyof SearchAndFilterDto] === '') {
+          continue;
+        }
+
         if (key === 'search') {
           searchAndFilterSplitData[key] =
             searchAndFilterDto[key as keyof SearchAndFilterDto];
@@ -76,7 +79,7 @@ export class ToyService {
         }
         if (key === 'type') {
           searchAndFilterSplitData[key] =
-            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(',');
+            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(' ');
           continue;
         }
         searchAndFilterSplitData[key] =
@@ -99,8 +102,6 @@ export class ToyService {
           .orWhere('toySite.toySite LIKE :search', {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
-          .limit(40)
-          .offset(offSet * 40)
           .getMany();
       } else {
         toyCategoryListPage = await this.toyRepository
@@ -112,8 +113,6 @@ export class ToyService {
             'toy.toySiteCd = toySite.id'
           )
           .where('category_cd IN (:category)', { category: categorySplitData })
-          .limit(40)
-          .offset(offSet * 40)
           .getMany();
       }
 
@@ -270,7 +269,7 @@ export class ToyService {
    * @param searchAndFilterDto
    */
   public async searchAndFilterNonCategory(
-    offSet: number,
+    // offSet: number,
     searchAndFilterDto: SearchAndFilterDto
   ) {
     try {
@@ -293,6 +292,10 @@ export class ToyService {
 
       // 입력받은 검색 & 필터 조건을 리스트 형태로 split
       for (const key in searchAndFilterDto) {
+        if (searchAndFilterDto[key as keyof SearchAndFilterDto] === '') {
+          continue;
+        }
+
         if (key === 'search') {
           searchAndFilterSplitData[key] =
             searchAndFilterDto[key as keyof SearchAndFilterDto];
@@ -300,7 +303,7 @@ export class ToyService {
         }
         if (key === 'type') {
           searchAndFilterSplitData[key] =
-            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(',');
+            searchAndFilterDto[key as keyof SearchAndFilterDto]?.split(' ');
           continue;
         }
         searchAndFilterSplitData[key] =
@@ -322,8 +325,8 @@ export class ToyService {
           .orWhere('toySite.toySite LIKE :search', {
             search: `%${searchAndFilterSplitData['search']}%`,
           })
-          .limit(40)
-          .offset(offSet * 40)
+          //.limit(40)
+          //.offset(offSet * 40)
           .getMany();
       } else {
         toyCategoryListPage = await this.toyRepository
@@ -334,8 +337,8 @@ export class ToyService {
             'toySite',
             'toy.toySiteCd = toySite.id'
           )
-          .limit(40)
-          .offset(offSet * 40)
+          //.limit(40)
+          //.offset(offSet * 40)
           .getMany();
       }
 
@@ -393,8 +396,6 @@ export class ToyService {
       filterData.price = priceList.sort();
       filterData.playHow = playHowList.sort();
       filterData.store = storeList;
-
-      console.log(searchAndFilterSplitData);
 
       if (Object.keys(searchAndFilterSplitData).length === 0) {
         result = toyCategoryList;

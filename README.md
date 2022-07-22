@@ -1,6 +1,15 @@
 # Nori-Server with Express
 요즘 누가 롯데월드 가나~? 나는 💚nori-dongsan💚 Server로 간다
 
+## 서비스 한 줄 설명
+다양한 장난감 정보를 한눈에! 우리 아이 장난감 대여 비교 플랫폼 nori
+
+<img width="1920" alt="노리핵심기능1" src="https://user-images.githubusercontent.com/51286325/180431000-9feb24da-3151-4808-af73-07afaae704d3.png">
+
+<img width="1920" alt="노리핵심기능2" src="https://user-images.githubusercontent.com/51286325/180431050-51978eb0-dd8a-4041-8668-f1a54bdbad87.png">
+
+<img width="1920" alt="노리핵심기능3" src="https://user-images.githubusercontent.com/51286325/180431090-32590bd2-3fc2-4b4f-845f-c022a11960f2.png">
+
 ## Member
 
 #### [구건모](https://github.com/gunom)
@@ -23,19 +32,52 @@
 
 ```markdown
 📦 src
-┣ 📂 config
+┣ 📂 constants
 ┃ 📂 controllers
+┣ 📂 dtos
 ┣ 📂 entities
-┣ 📂 interface
-┣ 📂 repository
-┣ 📂 routes
-┣ 📂 service
+┣ 📂 middlewares
+┣ 📂 modules
+┣ 📂 repositories
+┣ 📂 services
 ┣ 📂 utils
 ┣ 📜 app.ts
+┣ 📜 database.ts
+┣ 📜 env.ts
 ┣ 📜 server.ts
-┣ 📜 swagger.json
+```
+
+## Dependencies Module
+```markdown
+"dependencies: {
+    "aws-sdk": "^2.1178.0",
+    "body-parser": "^1.20.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "class-validator-jsonschema": "^3.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^2.3.3",
+    "reflect-metadata": "^0.1.13",
+    "routing-controllers": "^0.8.0",
+    "routing-controllers-openapi": "^1.8.1",
+    "slack-node": "^0.1.8",
+    "swagger-ui-express": "^4.1.4",
+    "ts-node": "^10.8.2",
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.24",
+    "typeorm-typedi-extensions": "^0.4.1",
+    "typescript": "^4.7.4",
+    "winston": "^3.8.1",
+    "winston-daily-rotate-file": "^4.7.1"
+}
 ```
 
 ## 전체 API 로직 구현 진척도
-* erd에 맞는 테이블 세팅 완료
-* API 코드 작성 0% -> 2022.07.17일까지 구현 완료 예정
+* API 코드 작성 100%
+
+[API 명세서](https://happy-elephant-0ba.notion.site/API-066af5edeae34f01b3a6c098ac95cda6)

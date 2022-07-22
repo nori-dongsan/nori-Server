@@ -15,6 +15,7 @@ export const env = {
   app: {
     port: Number(process.env.PORT) || 8080,
     apiPrefix: process.env.API_PREFIX || '/api',
+    ec2Instance: process.env.INSTANCE,
     jwtAccessSecret: process.env.JWT_SECRET_ACCESS_KEY,
     jwtRefreshSecret: process.env.JWT_SECRET_REFRESH_KEY,
   },
@@ -33,9 +34,9 @@ export const env = {
   s3: {
     accessKey: process.env.AWS_ACCESS_KEY,
     secretKey: process.env.AWS_SECRET_KEY,
-    bucketName: process.env.BUCKET_NAME
+    bucketName: process.env.BUCKET_NAME,
   },
   slack: {
-    webhookUrl: process.env.SLACK_WEBHOOK
-  }
+    webhookUrl: process.env.SLACK_WEBHOOK,
+  },
 };
