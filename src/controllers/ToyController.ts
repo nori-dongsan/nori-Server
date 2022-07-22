@@ -38,7 +38,6 @@ export class ToyController {
 
     try {
       const searchAndFilterList = await this.toyService.searchAndFilter(
-        offSet,
         categoryId,
         searchAndFilterDto
       );
