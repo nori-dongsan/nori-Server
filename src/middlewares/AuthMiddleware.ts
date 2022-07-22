@@ -10,7 +10,7 @@ import util from '../modules/util';
  * 헤더에서 accessToken을 추출한다.
  * @param req
  */
-const extractAccessToken = (req: Request) => {
+export const extractAccessToken = (req: Request) => {
   if (req.headers.accesstoken) {
     return String(req.headers.accesstoken);
   }

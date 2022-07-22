@@ -18,7 +18,7 @@ import statusCode from '../modules/statusCode';
 import util from '../modules/util';
 import e, { Response, Request } from 'express';
 import { BoardCommentService } from '../services/BoardCommentService';
-import { verifyAccessToken } from '../middlewares/AuthMiddleware';
+import { extractAccessToken, verifyAccessToken } from '../middlewares/AuthMiddleware';
 import { BoardResponseDto } from '../dtos/BoardDto';
 import { Board } from '../entities/Board';
 import { BoardService } from '../services/BoardService';
@@ -30,6 +30,9 @@ import { BoardImageService } from '../services/BoardImageService';
 import { BoardImageCreateDto } from '../dtos/BoardImageDto';
 import { logger } from '../utils/Logger';
 import { send } from '../modules/slack';
+import { env } from '../env';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { token } from '../dtos/AuthDto';
 
 @JsonController('/board')
 export class BoardController {
@@ -119,7 +122,6 @@ export class BoardController {
     }
   }
 
-  @UseBefore(verifyAccessToken)
   @HttpCode(200)
   @Get('/:boardId')
   @OpenAPI({
@@ -129,12 +131,19 @@ export class BoardController {
   })
   public async get(
     @Res() res: Response,
+    @Req() req: Request,
     @Param('boardId') boardId: number
   ): Promise<Response> {
-    const { id } = res.locals.jwtPayload;
+    const { accesstoken } = req.headers
+    let id
+    if (accesstoken) {
+      const jwtPayload = jwt.decode(String(accesstoken));
+      const jwtPayloadType = jwtPayload as JwtPayload;
+      id = jwtPayloadType.id
+    }
     const board = await this.boardService.get(boardId);
     let author = false;
-    if (board?.user.id == id) {
+    if (id && board?.user.id == id) {
       author = true;
     }
     if (!board) {
@@ -143,7 +152,7 @@ export class BoardController {
         .send(util.fail(statusCode.BAD_REQUEST, message.READ_BOARD_FAIL));
     }
     const comment = await this.boardCommentService.getListByBoard(board);
-    const boardResponseDto = new BoardResponseDto(board, comment!, id);
+    const boardResponseDto = new BoardResponseDto(board, comment!, 13);
     boardResponseDto['author'] = author;
     return res
       .status(statusCode.CREATED)
