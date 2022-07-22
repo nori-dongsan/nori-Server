@@ -40,3 +40,13 @@ jobs:
               sudo docker rm -f $(docker ps -qa)
               sudo docker pull ${{ secrets.DOCKER_REPO }}/nori-docker-server
               docker image prune -f
+  TEST:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: yarn
+      - run: yarn test
+  
