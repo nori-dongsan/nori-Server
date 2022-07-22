@@ -84,9 +84,6 @@ export class Toy {
   })
   toySite: ToySite;
 
-  @ManyToOne(() => ToySite, (toySite) => toySite.toys, {
-    onDelete: 'CASCADE',
-  })
   @IsNotEmpty()
   @Column({ name: 'toy_site_cd' })
   toySiteCd: number;
