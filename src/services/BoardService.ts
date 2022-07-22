@@ -67,10 +67,19 @@ export class BoardService {
    * @param boardId
    */
   public async delete(boardId: number) {
+    const queryRunner = await getConnection().createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
     try {
-      await this.boardRepository.delete({ id: boardId });
+      // await this.boardRepository.delete({ id: boardId });
+      const board = await queryRunner.manager.findByIds(Board, [boardId]);
+      await queryRunner.manager.remove(board)
+      await queryRunner.commitTransaction();
     } catch (err) {
       logger.error(err);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
     }
   }
 

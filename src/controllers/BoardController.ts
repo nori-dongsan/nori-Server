@@ -165,7 +165,7 @@ export class BoardController {
       );
   }
 
-  @UseBefore(verifyAccessToken)
+  // @UseBefore(verifyAccessToken)
   @HttpCode(200)
   @Delete('/:boardId')
   @OpenAPI({
