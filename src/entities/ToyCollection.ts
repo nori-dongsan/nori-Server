@@ -3,12 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ThemeDto } from '../dtos/HomeDto';
 import { Toy } from './Toy';
 
 @Entity({ name: 'toy_collection' })
